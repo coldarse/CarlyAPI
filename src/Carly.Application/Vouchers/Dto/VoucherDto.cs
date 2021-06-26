@@ -21,6 +21,6 @@ namespace Carly.Vouchers.Dto
         public DateTime stopDate { get; set; }
         public int limit { get; set; }
         public float discountAmount { get; set; }
-        public AddOn gift { get; set; }
+        public int giftId { get; set; }
     }
 }

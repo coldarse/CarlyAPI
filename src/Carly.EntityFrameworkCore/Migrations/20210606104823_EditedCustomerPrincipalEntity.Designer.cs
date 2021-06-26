@@ -3,14 +3,16 @@ using System;
 using Carly.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carly.Migrations
 {
     [DbContext(typeof(CarlyDbContext))]
-    partial class CarlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606104823_EditedCustomerPrincipalEntity")]
+    partial class EditedCustomerPrincipalEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1527,7 +1529,13 @@ namespace Carly.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerPrincipalId")
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CustomerPrincipalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrincipalId")
                         .HasColumnType("int");
 
                     b.Property<string>("addonname")
@@ -1552,18 +1560,16 @@ namespace Carly.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
-
-                    b.Property<int>("PackageId")
-                        .HasColumnType("int");
 
                     b.Property<float>("Premium")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PackageId");
 
                     b.ToTable("CustomerPrincipals");
                 });
@@ -1628,44 +1634,6 @@ namespace Carly.Migrations
                     b.HasIndex("TenancyName");
 
                     b.ToTable("AbpTenants");
-                });
-
-            modelBuilder.Entity("Carly.Packages.Package", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CoverType")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("CoveragePeriod")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OwnerEmail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerNRIC")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerPhoneNo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("VehicleModel")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("VehicleRegNo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("VehicleYear")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("Carly.Principals.Principal", b =>
@@ -1954,18 +1922,7 @@ namespace Carly.Migrations
                 {
                     b.HasOne("Carly.CustomerPrincipals.CustomerPrincipal", null)
                         .WithMany("AddOns")
-                        .HasForeignKey("CustomerPrincipalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Carly.CustomerPrincipals.CustomerPrincipal", b =>
-                {
-                    b.HasOne("Carly.Packages.Package", null)
-                        .WithMany("Principals")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerPrincipalId");
                 });
 
             modelBuilder.Entity("Carly.MultiTenancy.Tenant", b =>
@@ -2069,11 +2026,6 @@ namespace Carly.Migrations
             modelBuilder.Entity("Carly.CustomerPrincipals.CustomerPrincipal", b =>
                 {
                     b.Navigation("AddOns");
-                });
-
-            modelBuilder.Entity("Carly.Packages.Package", b =>
-                {
-                    b.Navigation("Principals");
                 });
 
             modelBuilder.Entity("Carly.Principals.Principal", b =>

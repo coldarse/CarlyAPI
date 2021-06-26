@@ -6,6 +6,9 @@ using Carly.MultiTenancy;
 using Carly.Principals;
 using Carly.AddOns;
 using Carly.Vouchers;
+using Carly.CustomerPrincipals;
+using Carly.CustomerAddOns;
+using Carly.Packages;
 
 namespace Carly.EntityFrameworkCore
 {
@@ -14,6 +17,10 @@ namespace Carly.EntityFrameworkCore
         public DbSet<Principal> Principals { get; set; }
         public DbSet<AddOn> AddOns { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<CustomerPrincipal> CustomerPrincipals { get; set; }
+        public DbSet<CustomerAddOn> CustomerAddOns { get; set; }
+        public DbSet<Package> Packages { get; set; }
+
         /* Define a DbSet for each entity of the application */
 
         public CarlyDbContext(DbContextOptions<CarlyDbContext> options)

@@ -19,6 +19,7 @@ using Abp.Json;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using Abp.Timing;
 
 namespace Carly.Web.Host.Startup
 {
@@ -34,6 +35,7 @@ namespace Carly.Web.Host.Startup
         public Startup(IWebHostEnvironment env)
         {
             _hostingEnvironment = env;
+            Clock.Provider = ClockProviders.Utc;
             _appConfiguration = env.GetAppConfiguration();
         }
 

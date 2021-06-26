@@ -43,9 +43,15 @@ namespace Carly.Principals
             List<AddOn> tempAddOn = _AddOnRepository.GetAll().Where(f => f.PrincipalId.ToString().Equals(id.ToString())).ToList();
             Principal tempPrincipal = _PrincipalRepository.GetAll().Where(g => g.Id.ToString().Equals(id.ToString())).FirstOrDefault();
 
+            return tempPrincipal;
+        }
+
+        public List<Principal> GetAllPrincipal()
+        {
+            List<AddOn> tempAddOn = _AddOnRepository.GetAll().ToList();
+            List<Principal> tempPrincipal = _PrincipalRepository.GetAll().ToList();
 
             return tempPrincipal;
-            
         }
 
 

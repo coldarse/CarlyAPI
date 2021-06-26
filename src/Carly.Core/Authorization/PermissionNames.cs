@@ -10,5 +10,6 @@
         public const string Pages_Roles = "Pages.Roles";
         public const string Pages_Principals = "Pages.Principals";
         public const string Pages_Vouchers = "Pages.Vouchers";
+        public const string Pages_Packages = "Pages.Packages";
     }
 }

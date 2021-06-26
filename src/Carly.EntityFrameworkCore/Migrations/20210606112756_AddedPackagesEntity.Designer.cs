@@ -3,14 +3,16 @@ using System;
 using Carly.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carly.Migrations
 {
     [DbContext(typeof(CarlyDbContext))]
-    partial class CarlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606112756_AddedPackagesEntity")]
+    partial class AddedPackagesEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1639,25 +1641,19 @@ namespace Carly.Migrations
                     b.Property<string>("CoverType")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CoveragePeriod")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CoverageStartDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("OwnerEmail")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("CoverageStopDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("OwnerNRIC")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("OwnerName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OwnerPhoneNo")
+                    b.Property<string>("VegicleRegNo")
                         .HasColumnType("longtext");
 
                     b.Property<string>("VehicleModel")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("VehicleRegNo")
                         .HasColumnType("longtext");
 
                     b.Property<string>("VehicleYear")

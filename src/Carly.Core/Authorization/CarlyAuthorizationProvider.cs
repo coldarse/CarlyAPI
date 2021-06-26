@@ -14,6 +14,7 @@ namespace Carly.Authorization
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
             context.CreatePermission(PermissionNames.Pages_Principals, L("Principal"), multiTenancySides: MultiTenancySides.Host);
             context.CreatePermission(PermissionNames.Pages_Vouchers, L("Voucher"), multiTenancySides: MultiTenancySides.Host);
+            context.CreatePermission(PermissionNames.Pages_Packages, L("Package"), multiTenancySides: MultiTenancySides.Host);
         }
 
         private static ILocalizableString L(string name)
