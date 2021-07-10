@@ -20,7 +20,9 @@ namespace Carly.Principals
 
         private readonly IRepository<AddOn> _AddOnRepository;
         private readonly IRepository<Principal> _PrincipalRepository;
-        public PrincipalAppService(IRepository<Principal, int> repository, IRepository<AddOn> AddOnRepository, IRepository<Principal> PrincipalRepository) : base(repository)
+        public PrincipalAppService(IRepository<Principal, int> repository, 
+            IRepository<AddOn> AddOnRepository, 
+            IRepository<Principal> PrincipalRepository) : base(repository)
         {
             _AddOnRepository = AddOnRepository;
             _PrincipalRepository = PrincipalRepository;

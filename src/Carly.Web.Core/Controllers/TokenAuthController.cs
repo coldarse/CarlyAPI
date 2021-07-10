@@ -17,6 +17,15 @@ using Carly.Authorization;
 using Carly.Authorization.Users;
 using Carly.Models.TokenAuth;
 using Carly.MultiTenancy;
+using Carly.Packages;
+using Carly.CustomerPrincipals;
+using Carly.CustomerAddOns;
+using Abp.Domain.Repositories;
+using Carly.Vouchers.Dto;
+using Carly.Vouchers;
+using Carly.AddOns;
+using Carly.Principals;
+using Carly.AddOns.Dto;
 
 namespace Carly.Controllers
 {
@@ -31,6 +40,15 @@ namespace Carly.Controllers
         private readonly IExternalAuthManager _externalAuthManager;
         private readonly UserRegistrationManager _userRegistrationManager;
 
+        private readonly IRepository<Package> _PackageRepository;
+        private readonly IRepository<CustomerPrincipal> _CustomerPrincipalRepository;
+        private readonly IRepository<CustomerAddOn> _CustomerAddOnRepository;
+
+        private readonly IRepository<Voucher> _VoucherRepository;
+
+        private readonly IRepository<AddOn> _AddOnRepository;
+        private readonly IRepository<Principal> _PrincipalRepository;
+
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -38,7 +56,13 @@ namespace Carly.Controllers
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            IRepository<Package> PackageRepository,
+            IRepository<CustomerPrincipal> CustomerPackageRepository,
+            IRepository<CustomerAddOn> CustomerAddOnRepository,
+            IRepository<Voucher> VoucherRepository,
+            IRepository<AddOn> AddOnRepository,
+            IRepository<Principal> PrincipalRepository)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -47,7 +71,104 @@ namespace Carly.Controllers
             _externalAuthConfiguration = externalAuthConfiguration;
             _externalAuthManager = externalAuthManager;
             _userRegistrationManager = userRegistrationManager;
+            _PackageRepository = PackageRepository;
+            _CustomerPrincipalRepository = CustomerPackageRepository;
+            _CustomerAddOnRepository = CustomerAddOnRepository;
+            _VoucherRepository = VoucherRepository;
+            _AddOnRepository = AddOnRepository;
+            _PrincipalRepository = PrincipalRepository;
         }
+
+        [HttpGet]
+        public Package GetPackageById(int id)
+        {
+            List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(id.ToString())).ToList();
+
+            //int principalId = tempPrincipal[0].Id;
+
+            List<CustomerAddOn>[] a = new List<CustomerAddOn>[3];
+            int x = 0;
+            foreach (var prin in tempPrincipal)
+            {
+                a[x] = _CustomerAddOnRepository.GetAll().Where(f => f.CustomerPrincipalId.ToString().Equals(prin.Id.ToString())).ToList();
+                x += 1;
+            }
+            //List<CustomerAddOn> tempAddOn = _CustomerAddOnRepository.GetAll().Where(f => f.CustomerPrincipalId.ToString().Equals(principalId.ToString())).ToList();
+
+            Package tempPackage = _PackageRepository.FirstOrDefault(f => f.Id.ToString().Equals(id.ToString()));
+
+            return tempPackage;
+        }
+
+        [HttpPost]
+        public isValidDto isVoucherValid(string vouchercode)
+        {
+            List<Voucher> tempVoucher = _VoucherRepository.GetAll().ToList();
+
+            isValidDto tempIsValid = new isValidDto();
+
+            foreach (var d in tempVoucher)
+            {
+                if (vouchercode.ToLower().Contains(d.code.ToLower().ToString()))
+                {
+                    string temp = vouchercode.ToUpper().Replace(d.code.ToUpper().ToString(), "");
+                    int limit = 0;
+                    bool isSucceed = Int32.TryParse(temp, out limit);
+                    if (isSucceed)
+                    {
+                        if (limit <= Convert.ToInt32(d.limit))
+                        {
+                            tempIsValid.isValid = true;
+                            tempIsValid.Type = d.type;
+                            tempIsValid.minAmount = d.minAmount;
+                            tempIsValid.discountAmount = d.discountAmount;
+                            tempIsValid.giftId = d.giftId;
+
+                            return tempIsValid;
+                        }
+                        else
+                        {
+                            tempIsValid.isValid = false;
+                            tempIsValid.Type = "";
+                            tempIsValid.minAmount = 0.00f;
+                            tempIsValid.discountAmount = 0.00f;
+                            tempIsValid.giftId = 0;
+
+                            return tempIsValid;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                }
+            }
+
+            tempIsValid.isValid = false;
+            tempIsValid.Type = "";
+            tempIsValid.minAmount = 0.00f;
+            tempIsValid.discountAmount = 0.00f;
+            tempIsValid.giftId = 0;
+
+            return tempIsValid;
+        }
+
+        [HttpGet]
+        public GiftDto getGift(int giftId)
+        {
+            AddOn tempAddOn = _AddOnRepository.FirstOrDefault(giftId);
+            Principal tempPrincipal = _PrincipalRepository.FirstOrDefault(tempAddOn.PrincipalId);
+
+            GiftDto tempGift = new GiftDto();
+
+            tempGift.addOnId = tempAddOn.Id;
+            tempGift.addOnName = tempAddOn.addonname;
+            tempGift.principalId = tempPrincipal.Id;
+            tempGift.principalName = tempPrincipal.Name;
+
+            return tempGift;
+        } 
 
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
