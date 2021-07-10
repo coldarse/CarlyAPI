@@ -22,6 +22,8 @@ using Carly.Roles.Dto;
 using Carly.Users.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Carly.Emails;
+using System.IO;
 
 namespace Carly.Users
 {
@@ -245,6 +247,91 @@ namespace Carly.Users
             }
 
             return true;
+        }
+
+        public async Task<bool> SendEmail(EmailContentDto emailContentDto)
+        {
+            //string FolderName = @"C:\inetpub\wwwroot\ASNBAPI\receipts";
+            //if (!System.IO.Directory.Exists(FolderName)) { System.IO.Directory.CreateDirectory(FolderName); }
+            //string filepath = FolderName + @"\" + emailContentDto.attachmentFileName;
+            //System.IO.File.WriteAllBytes(filepath, emailContentDto.attachment);
+
+            string EmailSubject = "CARLY TESTING";
+            string EmailBody = "<div style=\"margin: 0\">"
+                + "<table border=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background:#fff; font-family:'Gotham','Hiragino Sans GB','Microsoft Yahei',sans-serif; font-size:18px; line-height:24px\">"
+                + "<tbody>"
+                + "<tr><td></td>"
+                + "<td width=\"600\" style=\"background:#21bcc1; background:transparent linear-gradient(0deg,#21bcc1 0%,#052375 100%) 0% 0% no-repeat padding-box; border-radius: 0 0 1rem 1rem\">"
+                + "<p style=\"text-align:center; margin: 15px 0\"><img src=\"https://myinsurer.alephmedia.my/wp-content/uploads/2021/06/carly-logo-dark-uai-720x292.png\" alt=\"Carly\" width=\"158\" height=\"73\" data-image-whitelisted=\"\" class=\"CToWUd\"></p>"
+                + "<p style=\"text-align:center; font-size:45px; line-height:1; margin: 15px 0 25px; color:#fff;\">Affordable Motor Insurance </p>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td>"
+                + "<p style=\"text-align:center; font-size:20px; line-height:1; margin: 15px 0 5px; color:#000;\">Thank you for inquiring through us! </p>"
+                + "<p style=\"text-align:center; font-size:15px; line-height:1; margin: 15px 0 1px; color:#000;\">Below are your quotation details.</p>"
+                + "<tr><td></td>"
+                + "<td width=\"600\">"
+                + "<p style=\"margin: 20px 0\"></p>"
+                + "<div>"
+                + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:580px; background-color:#f5f5f5; margin-left:10px; border:1px solid #d4d4d4; box-sizing:border-box; padding:10px 20px; border-radius: 0.5rem\">"
+                + "<tbody>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Vehicle Owner</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Jordan Chen</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Vehicle Registration Number</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\"> VDX 5119</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Coverage Period</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">12 Months</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; padding:6px 0\">Add Ons</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-size:16px; padding:6px 0\">Available</td>"
+                + "</tr>"
+                + "</tbody>"
+                + "</table>"
+                + "</div>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td width=\"600\">"
+                + "<p style=\"text-align:center; margin: 10px 0 5px;\"><img src=\"https://myinsurer.alephmedia.my/wp-content/uploads/2021/06/allianz-logo-png-transparent-uai-258x104.png\" alt=\"Insurance\" style=\"max-width: 40%\" data-image-whitelisted=\"\" class=\"CToWUd\"></p>"
+                + "<p style=\"font-size:16px; text-align:center; line-height:1.5; margin:0;\">Lowest Pricing</p>"
+                + "<p style=\"font-size:30px; text-align:center; line-height:1; margin: 5px 0 5px;\">RM 388.89</p>"
+                + "<p style=\"font-size:16px; text-align:center; line-height:1; margin: 0 0 25px;\">* Inclusive of SST &amp; Stamp Duty</p>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td width=\"600\" style=\"background:#21bcc1; background:transparent linear-gradient(0deg,#052375 0%,#21bcc1 100%) 0% 0% no-repeat padding-box; padding: 35px 0px; border-radius: 1rem 1rem 0 0\">"
+                + "<div>"
+                + "<p style=\"text-align:center; margin: 0 0 25px;\"><a href=\"\" style=\"background-color:#000; color:#fff; font-size:16px; padding:18px 35px; text-decoration:none; border-radius:35px; display:inline-block; line-height:1\" "
+                + "target=\"_blank\" data-saferedirecturl=\"\"> View Quotes </a></p>"
+                + "<p style=\"text-align:center; color:#fff\"> Pay With </p>"
+                + "</div>"
+                + "</tbody>"
+                + "</table>"
+                + "</div>";
+
+
+
+                 string filepath = "";
+            //using streamreader for reading my htmltemplate   
+
+           
+            //SK_KioskModule KioskModuleObj = _kioskModuleRepository.GetAsync(emailContentDto.Module).Result;
+            //if (!Equals(KioskModuleObj, null))
+            //{
+            //    EmailSubject = Equals(emailContentDto.language, "MS") ? KioskModuleObj.SubjectBM : KioskModuleObj.SubjectEN;
+            //    EmailBody = Equals(emailContentDto.language, "MS") ? KioskModuleObj.MessageBM : KioskModuleObj.MessageEN;
+            //    EmailBody = EmailBody.Replace(@"<Name>", emailContentDto.Name).Replace(@"<IC>", emailContentDto.IC).Replace(@"<UnitHolderID>", emailContentDto.UnitHolderID).Replace(@"<ModuleName>", KioskModuleObj.KM_Name).Replace(@"<TrxDate>", emailContentDto.TrxDate.ToString("dd-MMM-yyyy HH:mm:ss"));
+            //}
+            Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
+
+            return await emailAppService.SendEmailAsync(emailContentDto.emailAddressList, EmailSubject, EmailBody, filepath);
         }
     }
 }

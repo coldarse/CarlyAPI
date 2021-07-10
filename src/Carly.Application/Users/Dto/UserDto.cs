@@ -36,5 +36,15 @@ namespace Carly.Users.Dto
         public DateTime CreationTime { get; set; }
 
         public string[] RoleNames { get; set; }
+
+    }
+
+    public class EmailContentDto
+    {
+        public string emailAddressList { get; set; }
+        public DateTime TrxDate { get; set; }
+        public string language { get; set; }
+        public string attachmentFileName { get; set; }
+        public byte[] attachment { get; set; }
     }
 }
