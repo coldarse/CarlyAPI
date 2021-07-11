@@ -13,5 +13,6 @@ namespace Carly.Vouchers.Dto
         public float minAmount { get; set; }
         public float discountAmount { get; set; }
         public int giftId { get; set; }
+        public string reason { get; set; }
     }
 }

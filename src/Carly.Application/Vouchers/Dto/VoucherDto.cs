@@ -22,5 +22,6 @@ namespace Carly.Vouchers.Dto
         public int limit { get; set; }
         public float discountAmount { get; set; }
         public int giftId { get; set; }
+        public bool isGenerated { get; set; }
     }
 }

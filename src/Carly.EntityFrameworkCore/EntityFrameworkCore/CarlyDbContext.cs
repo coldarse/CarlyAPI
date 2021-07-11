@@ -20,6 +20,7 @@ namespace Carly.EntityFrameworkCore
         public DbSet<CustomerPrincipal> CustomerPrincipals { get; set; }
         public DbSet<CustomerAddOn> CustomerAddOns { get; set; }
         public DbSet<Package> Packages { get; set; }
+        public DbSet<GeneratedVoucher> GeneratedVouchers { get; set; }
 
         /* Define a DbSet for each entity of the application */
 

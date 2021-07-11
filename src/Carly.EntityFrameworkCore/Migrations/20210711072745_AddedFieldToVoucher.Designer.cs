@@ -3,14 +3,16 @@ using System;
 using Carly.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carly.Migrations
 {
     [DbContext(typeof(CarlyDbContext))]
-    partial class CarlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210711072745_AddedFieldToVoucher")]
+    partial class AddedFieldToVoucher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1696,9 +1698,6 @@ namespace Carly.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("RedeemedByPackage")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");

@@ -26,6 +26,8 @@ using Carly.Vouchers;
 using Carly.AddOns;
 using Carly.Principals;
 using Carly.AddOns.Dto;
+using Carly.EncryptKeys;
+using Newtonsoft.Json;
 
 namespace Carly.Controllers
 {
@@ -49,6 +51,8 @@ namespace Carly.Controllers
         private readonly IRepository<AddOn> _AddOnRepository;
         private readonly IRepository<Principal> _PrincipalRepository;
 
+        private readonly IRepository<GeneratedVoucher> _GeneratedVoucherRepository;
+
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -62,7 +66,8 @@ namespace Carly.Controllers
             IRepository<CustomerAddOn> CustomerAddOnRepository,
             IRepository<Voucher> VoucherRepository,
             IRepository<AddOn> AddOnRepository,
-            IRepository<Principal> PrincipalRepository)
+            IRepository<Principal> PrincipalRepository,
+            IRepository<GeneratedVoucher> GeneratedVoucherRepository)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -77,14 +82,71 @@ namespace Carly.Controllers
             _VoucherRepository = VoucherRepository;
             _AddOnRepository = AddOnRepository;
             _PrincipalRepository = PrincipalRepository;
+            _GeneratedVoucherRepository = GeneratedVoucherRepository;
+        }
+
+
+        [HttpPut]
+        public async Task<bool> RedeemVoucher(string redeemvoucher)
+        {
+            RedeemVoucherDto tempredeemvoucher = JsonConvert.DeserializeObject<RedeemVoucherDto>(redeemvoucher);
+            string vouchercode = tempredeemvoucher.vouchercode;
+            int packageid = tempredeemvoucher.packageid;
+            string claimDate = tempredeemvoucher.claimDate;
+            string signature = tempredeemvoucher.signature.Replace(" ", "+");
+
+            tempredeemvoucher.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempredeemvoucher, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+
+            if(!Equals(encryptedString, signature)) { return false; }
+
+            DateTime newClaimDate = Convert.ToDateTime(claimDate);
+            List<GeneratedVoucher> tempGenVoucher = _GeneratedVoucherRepository.GetAll().ToList();
+
+            foreach (var g in tempGenVoucher)
+            {
+                if (g.Code.ToLower().Equals(vouchercode.ToLower()))
+                {
+                    if(newClaimDate >= g.StartDate && newClaimDate <= g.EndDate)
+                    {
+                        g.isRedeemed = true;
+                        g.RedeemedByPackage = packageid;
+                        await _GeneratedVoucherRepository.UpdateAsync(g);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+
         }
 
         [HttpGet]
-        public Package GetPackageById(int id)
+        public Package GetPackageById(string getpackagebyid)
         {
+            GetPackageByIdDto tempgetpackagebyid = JsonConvert.DeserializeObject<GetPackageByIdDto>(getpackagebyid);
+            int id = tempgetpackagebyid.id;
+            string signature = tempgetpackagebyid.signature.Replace(" ", "+");
+
+            tempgetpackagebyid.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempgetpackagebyid, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+
+            if (!Equals(encryptedString, signature)) { return new Package(); }
+
             List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(id.ToString())).ToList();
 
-            //int principalId = tempPrincipal[0].Id;
 
             List<CustomerAddOn>[] a = new List<CustomerAddOn>[3];
             int x = 0;
@@ -101,11 +163,59 @@ namespace Carly.Controllers
         }
 
         [HttpPost]
-        public isValidDto isVoucherValid(string vouchercode)
+        public isValidDto isVoucherValid(string isvouchervalid)
         {
-            List<Voucher> tempVoucher = _VoucherRepository.GetAll().ToList();
+            isVoucherValidDto tempisvouchervalid = JsonConvert.DeserializeObject<isVoucherValidDto>(isvouchervalid);
+            string vouchercode = tempisvouchervalid.vouchercode;
+            string claimDate = tempisvouchervalid.claimDate;
+            string signature = tempisvouchervalid.signature.Replace(" ", "+");
 
+            tempisvouchervalid.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempisvouchervalid, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+                
+            if (!Equals(encryptedString, signature)) { return new isValidDto(); }
+
+            DateTime newclaimDate = Convert.ToDateTime(claimDate);
             isValidDto tempIsValid = new isValidDto();
+            if (vouchercode == null)
+            {
+                tempIsValid.isValid = false;
+                tempIsValid.Type = "";
+                tempIsValid.minAmount = 0.00f;
+                tempIsValid.discountAmount = 0.00f;
+                tempIsValid.giftId = 0;
+                tempIsValid.reason = "Empty Voucher Code";
+
+                return tempIsValid;
+            }
+
+            List<GeneratedVoucher> tempGenVoucher = _GeneratedVoucherRepository.GetAll().ToList();
+
+            foreach(var g in tempGenVoucher)
+            {
+                if (g.Code.ToLower().Equals(vouchercode.ToLower()))
+                {
+                    if(g.isRedeemed == true)
+                    {
+                        tempIsValid.isValid = false;
+                        tempIsValid.Type = "";
+                        tempIsValid.minAmount = 0.00f;
+                        tempIsValid.discountAmount = 0.00f;
+                        tempIsValid.giftId = 0;
+                        tempIsValid.reason = "Voucher Code has been Claimed";
+
+                        return tempIsValid;
+                    }
+                }
+            }
+
+            List<Voucher> tempVoucher = _VoucherRepository.GetAll().ToList();
 
             foreach (var d in tempVoucher)
             {
@@ -118,13 +228,28 @@ namespace Carly.Controllers
                     {
                         if (limit <= Convert.ToInt32(d.limit))
                         {
-                            tempIsValid.isValid = true;
-                            tempIsValid.Type = d.type;
-                            tempIsValid.minAmount = d.minAmount;
-                            tempIsValid.discountAmount = d.discountAmount;
-                            tempIsValid.giftId = d.giftId;
+                            if (newclaimDate >= d.startDate && newclaimDate <= d.stopDate)
+                            {
+                                tempIsValid.isValid = true;
+                                tempIsValid.Type = d.type;
+                                tempIsValid.minAmount = d.minAmount;
+                                tempIsValid.discountAmount = d.discountAmount;
+                                tempIsValid.giftId = d.giftId;
+                                tempIsValid.reason = "Success";
 
-                            return tempIsValid;
+                                return tempIsValid;
+                            }
+                            else
+                            {
+                                tempIsValid.isValid = false;
+                                tempIsValid.Type = "";
+                                tempIsValid.minAmount = 0.00f;
+                                tempIsValid.discountAmount = 0.00f;
+                                tempIsValid.giftId = 0;
+                                tempIsValid.reason = "Voucher Expired/Not yet activated";
+
+                                return tempIsValid;
+                            }
                         }
                         else
                         {
@@ -133,6 +258,7 @@ namespace Carly.Controllers
                             tempIsValid.minAmount = 0.00f;
                             tempIsValid.discountAmount = 0.00f;
                             tempIsValid.giftId = 0;
+                            tempIsValid.reason = "Invalid Voucher Code";
 
                             return tempIsValid;
                         }
@@ -150,13 +276,29 @@ namespace Carly.Controllers
             tempIsValid.minAmount = 0.00f;
             tempIsValid.discountAmount = 0.00f;
             tempIsValid.giftId = 0;
+            tempIsValid.reason = "Invalid Voucher Code";
 
             return tempIsValid;
         }
 
         [HttpGet]
-        public GiftDto getGift(int giftId)
+        public GiftDto getGift(string getgift)
         {
+            getGiftDto tempgetgift = JsonConvert.DeserializeObject<getGiftDto>(getgift);
+            int giftId = tempgetgift.giftId;
+            string signature = tempgetgift.signature.Replace(" ", "+");
+
+            tempgetgift.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempgetgift, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+
+            if (!Equals(encryptedString, signature)) { return new GiftDto(); }
+
             AddOn tempAddOn = _AddOnRepository.FirstOrDefault(giftId);
             Principal tempPrincipal = _PrincipalRepository.FirstOrDefault(tempAddOn.PrincipalId);
 
