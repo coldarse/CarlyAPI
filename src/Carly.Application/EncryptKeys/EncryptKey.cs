@@ -21,8 +21,8 @@ namespace Carly.EncryptKeys
                 rm.BlockSize = 128;
                 rm.KeySize = 128;
                 rm.Mode = CipherMode.ECB;
-                rm.Key = Encoding.ASCII.GetBytes(CryptKey);
-                byte[] inputByteArray = Encoding.ASCII.GetBytes(value);
+                rm.Key = Encoding.UTF8.GetBytes(CryptKey);
+                byte[] inputByteArray = Encoding.UTF8.GetBytes(value);
                 MemoryStream ms = new MemoryStream();
                 CryptoStream cs = new CryptoStream(ms, rm.CreateEncryptor(rm.Key, rm.IV), CryptoStreamMode.Write);
                 cs.Write(inputByteArray, 0, inputByteArray.Length);
@@ -44,13 +44,13 @@ namespace Carly.EncryptKeys
                 rm.BlockSize = 128;
                 rm.KeySize = 128;
                 rm.Mode = CipherMode.ECB;
-                rm.Key = Encoding.ASCII.GetBytes(CryptKey);
-                byte[] inputByteArray = Encoding.ASCII.GetBytes(value.Replace(" ", "+"));
+                rm.Key = Encoding.UTF8.GetBytes(CryptKey);
+                byte[] inputByteArray = Convert.FromBase64String(value.Replace(" ", "+"));
                 MemoryStream ms = new MemoryStream();
-                CryptoStream cs = new CryptoStream(ms, rm.CreateEncryptor(), CryptoStreamMode.Write);
+                CryptoStream cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write);
                 cs.Write(inputByteArray, 0, inputByteArray.Length);
                 cs.FlushFinalBlock();
-                return Encoding.ASCII.GetString(ms.ToArray());
+                return Encoding.UTF8.GetString(ms.ToArray());
             }
             catch
             {

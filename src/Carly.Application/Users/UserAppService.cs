@@ -191,7 +191,7 @@ namespace Carly.Users
 
         public async Task<bool> ChangePassword(ChangePasswordDto input)
         {
-            await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
+            //await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
             var user = await _userManager.FindByIdAsync(AbpSession.GetUserId().ToString());
             if (user == null)

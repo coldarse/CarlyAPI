@@ -24,7 +24,8 @@ namespace Carly.GeneratedVouchers
         protected override IQueryable<GeneratedVoucher> CreateFilteredQuery(PagedGeneratedVoucherResultRequestDto input)
         {
             return Repository.GetAllIncluding()
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Code.Contains(input.Keyword));
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Code.Contains(input.Keyword))
+                .WhereIf(input.isRedeemed.HasValue, x => x.isRedeemed == input.isRedeemed);
 
         }
 

@@ -127,11 +127,29 @@ namespace Carly.Controllers
 
         }
 
+
+        [HttpPost]
+        public string testEncrypt(int id)
+        {
+            string stringid = id.ToString();
+            string encryptedID = EncryptKey.Encrypt(stringid);
+            return encryptedID;
+        }
+
+        [HttpPost]
+        public int testDecrypt(string encryptedID)
+        {
+            string stringid = EncryptKey.Decrypt(encryptedID);
+            int id = Convert.ToInt32(stringid);
+            return id;
+        }
+
         [HttpGet]
         public Package GetPackageById(string getpackagebyid)
         {
             GetPackageByIdDto tempgetpackagebyid = JsonConvert.DeserializeObject<GetPackageByIdDto>(getpackagebyid);
-            int id = tempgetpackagebyid.id;
+            string stringid = EncryptKey.Decrypt(tempgetpackagebyid.id);
+            int id = Convert.ToInt32(stringid);
             string signature = tempgetpackagebyid.signature.Replace(" ", "+");
 
             tempgetpackagebyid.signature = "";

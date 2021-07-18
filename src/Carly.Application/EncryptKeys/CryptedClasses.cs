@@ -20,7 +20,7 @@ namespace Carly.EncryptKeys
 
     public class GetPackageByIdDto
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string signature { get; set; }
     }
 

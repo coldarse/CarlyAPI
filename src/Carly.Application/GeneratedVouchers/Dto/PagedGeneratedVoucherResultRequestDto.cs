@@ -10,5 +10,6 @@ namespace Carly.GeneratedVouchers.Dto
     public class PagedGeneratedVoucherResultRequestDto : PagedResultRequestDto
     {
         public string Keyword { get; set; }
+        public bool? isRedeemed { get; set; }
     }
 }
