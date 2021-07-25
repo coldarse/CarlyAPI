@@ -250,3 +250,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+src/Carly.Web.Host/App_Data/Logs/Logs.txt
+src/Carly.Web.Host/appsettings.json
+src/Carly.Web.Host/App_Data/Logs/Logs.txt
+src/Carly.Web.Host/App_Data/Logs/Logs.txt

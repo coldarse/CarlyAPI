@@ -14,6 +14,7 @@ namespace Carly.CustomerPrincipals.Dto
     public class CustomerPrincipalDto : EntityDto<int>
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public float Premium { get; set; }
         public List<CustomerAddOnDto> AddOns { get; set; }
         public int PackageId { get; set; }
