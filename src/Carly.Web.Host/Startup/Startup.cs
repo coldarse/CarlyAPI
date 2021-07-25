@@ -139,7 +139,7 @@ namespace Carly.Web.Host.Startup
 
             app.UseAbpRequestLocalization();
 
-          
+     
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
