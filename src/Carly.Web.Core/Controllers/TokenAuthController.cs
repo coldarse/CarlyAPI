@@ -28,6 +28,8 @@ using Carly.Principals;
 using Carly.AddOns.Dto;
 using Carly.EncryptKeys;
 using Newtonsoft.Json;
+using Carly.Sales;
+using Carly.Sales.Dto;
 
 namespace Carly.Controllers
 {
@@ -52,6 +54,7 @@ namespace Carly.Controllers
         private readonly IRepository<Principal> _PrincipalRepository;
 
         private readonly IRepository<GeneratedVoucher> _GeneratedVoucherRepository;
+        private readonly IRepository<Sale> _SaleRepository;
 
         public TokenAuthController(
             LogInManager logInManager,
@@ -67,7 +70,9 @@ namespace Carly.Controllers
             IRepository<Voucher> VoucherRepository,
             IRepository<AddOn> AddOnRepository,
             IRepository<Principal> PrincipalRepository,
-            IRepository<GeneratedVoucher> GeneratedVoucherRepository)
+            IRepository<GeneratedVoucher> GeneratedVoucherRepository,
+            IRepository<Sale> SaleRepository
+            )
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -83,8 +88,52 @@ namespace Carly.Controllers
             _AddOnRepository = AddOnRepository;
             _PrincipalRepository = PrincipalRepository;
             _GeneratedVoucherRepository = GeneratedVoucherRepository;
+            _SaleRepository = SaleRepository;
         }
 
+
+        [HttpPost]
+        public async Task<Sale> CreateSale(string sales)
+        {
+            createSalesDto tempsales = JsonConvert.DeserializeObject<createSalesDto>(sales);
+            string package = tempsales.package;
+            int selectedPrincipal = tempsales.selectedPrincipal;
+            string selectedAddOns = tempsales.selectedAddOns;
+            string premium = tempsales.premium;
+            string address1 = tempsales.address1;
+            string address2 = tempsales.address2;
+            string postcode = tempsales.postcode;
+            string city = tempsales.city;
+            string state = tempsales.state;
+            string signature = tempsales.signature.Replace(" ", "+");
+
+            int tempPackage = Convert.ToInt32(EncryptKey.Decrypt(package));
+
+            tempsales.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempsales, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+
+            if (!Equals(encryptedString, signature)) { return new Sale(); }
+
+            Sale newSales = new Sale();
+            newSales.Package = tempPackage;
+            newSales.SelectedPrincipal = selectedPrincipal;
+            newSales.SelectedAddOns = selectedAddOns;
+            newSales.Premium = float.Parse(premium);
+            newSales.TransactionDateTime = DateTime.Now;
+            newSales.Address1 = address1;
+            newSales.Address2 = address2;
+            newSales.Postcode = postcode;
+            newSales.City = city;
+            newSales.State = state;
+
+            return await _SaleRepository.InsertAsync(newSales);
+        }
 
         [HttpPut]
         public async Task<bool> RedeemVoucher(string redeemvoucher)
@@ -149,7 +198,6 @@ namespace Carly.Controllers
         {
             GetPackageByIdDto tempgetpackagebyid = JsonConvert.DeserializeObject<GetPackageByIdDto>(getpackagebyid);
             string stringid = EncryptKey.Decrypt(tempgetpackagebyid.id);
-            int id = Convert.ToInt32(stringid);
             string signature = tempgetpackagebyid.signature.Replace(" ", "+");
 
             tempgetpackagebyid.signature = "";
@@ -163,7 +211,7 @@ namespace Carly.Controllers
 
             if (!Equals(encryptedString, signature)) { return new Package(); }
 
-            List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(id.ToString())).ToList();
+            List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(stringid)).ToList();
 
 
             List<CustomerAddOn>[] a = new List<CustomerAddOn>[3];
@@ -175,7 +223,7 @@ namespace Carly.Controllers
             }
             //List<CustomerAddOn> tempAddOn = _CustomerAddOnRepository.GetAll().Where(f => f.CustomerPrincipalId.ToString().Equals(principalId.ToString())).ToList();
 
-            Package tempPackage = _PackageRepository.FirstOrDefault(f => f.Id.ToString().Equals(id.ToString()));
+            Package tempPackage = _PackageRepository.FirstOrDefault(f => f.Id.ToString().Equals(stringid));
 
             return tempPackage;
         }

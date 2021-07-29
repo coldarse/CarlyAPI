@@ -148,13 +148,13 @@ namespace Carly.Web.Host.Startup
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
-
+            //app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
+            app.UseSwagger();
             // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
             app.UseSwaggerUI(options =>
             {
                 // specifying the Swagger JSON endpoint.
-                options.SwaggerEndpoint($"/swagger/{_apiVersion}/swagger.json", $"Carly API {_apiVersion}");
+                options.SwaggerEndpoint($"{_apiVersion}/swagger.json", $"Carly API {_apiVersion}");
                 options.IndexStream = () => Assembly.GetExecutingAssembly()
                     .GetManifestResourceStream("Carly.Web.Host.wwwroot.swagger.ui.index.html");
                 options.DisplayRequestDuration(); // Controls the display of the request duration (in milliseconds) for "Try it out" requests.  

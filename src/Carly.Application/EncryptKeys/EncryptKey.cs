@@ -52,7 +52,7 @@ namespace Carly.EncryptKeys
                 cs.FlushFinalBlock();
                 return Encoding.UTF8.GetString(ms.ToArray());
             }
-            catch
+            catch (Exception ex)
             {
                 return "";
             }

@@ -1552,6 +1552,9 @@ namespace Carly.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -1639,8 +1642,8 @@ namespace Carly.Migrations
                     b.Property<string>("CoverType")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CoveragePeriod")
-                        .HasColumnType("int");
+                    b.Property<string>("CoveragePeriod")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("OwnerEmail")
                         .HasColumnType("longtext");
@@ -1677,12 +1680,56 @@ namespace Carly.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Principals");
+                });
+
+            modelBuilder.Entity("Carly.Sales.Sale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Address2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("City")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Package")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Postcode")
+                        .HasColumnType("longtext");
+
+                    b.Property<float>("Premium")
+                        .HasColumnType("float");
+
+                    b.Property<string>("SelectedAddOns")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("SelectedPrincipal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("TransactionDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("Carly.Vouchers.GeneratedVoucher", b =>

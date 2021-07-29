@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Carly.Authorization;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace Carly.Vouchers
 {
     [AbpAuthorize(PermissionNames.Pages_Vouchers)]
-    public class VoucherAppService : CrudAppService<Voucher, VoucherDto>
+    public class VoucherAppService : CrudAppService<Voucher, VoucherDto, int>
     {
 
         private readonly IRepository<Voucher> _VoucherRepository;
@@ -24,6 +25,24 @@ namespace Carly.Vouchers
         {
             _VoucherRepository = VoucherRepository;
             _GeneratedVoucherRepository = GeneratedVoucherRepository;
+        }
+
+        public override void Delete(EntityDto<int> input)
+        {
+            //get voucher
+            Voucher tempVoucher = _VoucherRepository.FirstOrDefault(y => y.Id.ToString().Equals(input.Id.ToString()));
+            //get list of all generated vouchers
+            List<GeneratedVoucher> tempGenVoucher = _GeneratedVoucherRepository.GetAll().ToList();
+
+            foreach(var vouch in tempGenVoucher)
+            {
+                if (vouch.Code.ToLower().Contains(tempVoucher.code.ToLower()))
+                {
+                    _GeneratedVoucherRepository.Delete(vouch.Id);
+                }
+            }
+
+            base.Delete(input);
         }
 
         [HttpPut]

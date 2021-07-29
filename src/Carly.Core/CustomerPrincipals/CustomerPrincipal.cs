@@ -11,6 +11,7 @@ namespace Carly.CustomerPrincipals
     public class CustomerPrincipal : Entity<int>
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public float Premium { get; set; }
         public List<CustomerAddOn> AddOns { get; set; }
         public int PackageId { get; set; }

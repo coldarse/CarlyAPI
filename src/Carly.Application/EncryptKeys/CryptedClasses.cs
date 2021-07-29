@@ -36,4 +36,18 @@ namespace Carly.EncryptKeys
         public int giftId { get; set; }
         public string signature { get; set; }
     }
+
+    public class createSalesDto
+    {
+        public string package { get; set; }
+        public int selectedPrincipal { get; set; }
+        public string selectedAddOns { get; set; }
+        public string premium { get; set; }
+        public string address1 { get; set; }
+        public string address2 { get; set; }
+        public string postcode { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string signature { get; set; }
+    }
 }
