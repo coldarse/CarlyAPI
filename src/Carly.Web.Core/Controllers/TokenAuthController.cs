@@ -198,7 +198,6 @@ namespace Carly.Controllers
         {
             GetPackageByIdDto tempgetpackagebyid = JsonConvert.DeserializeObject<GetPackageByIdDto>(getpackagebyid);
             string stringid = EncryptKey.Decrypt(tempgetpackagebyid.id);
-            int id = Convert.ToInt32(stringid);
             string signature = tempgetpackagebyid.signature.Replace(" ", "+");
 
             tempgetpackagebyid.signature = "";
@@ -212,7 +211,7 @@ namespace Carly.Controllers
 
             if (!Equals(encryptedString, signature)) { return new Package(); }
 
-            List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(id.ToString())).ToList();
+            List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(stringid)).ToList();
 
 
             List<CustomerAddOn>[] a = new List<CustomerAddOn>[3];
@@ -224,7 +223,7 @@ namespace Carly.Controllers
             }
             //List<CustomerAddOn> tempAddOn = _CustomerAddOnRepository.GetAll().Where(f => f.CustomerPrincipalId.ToString().Equals(principalId.ToString())).ToList();
 
-            Package tempPackage = _PackageRepository.FirstOrDefault(f => f.Id.ToString().Equals(id.ToString()));
+            Package tempPackage = _PackageRepository.FirstOrDefault(f => f.Id.ToString().Equals(stringid));
 
             return tempPackage;
         }
