@@ -41,10 +41,15 @@ namespace Carly.Users.Dto
 
     public class EmailContentDto
     {
-        public string emailAddressList { get; set; }
-        public DateTime TrxDate { get; set; }
-        public string language { get; set; }
-        public string attachmentFileName { get; set; }
-        public byte[] attachment { get; set; }
+        public string Subject { get; set; }
+        public string emailTo { get; set; }
+        public string VehicleOwnerName { get; set; }
+        public string VehicleRegistrationNumber { get; set; }
+        public string CoveragePeriod { get; set; }
+        public string AddOns { get; set; }
+        public string ImageLink { get; set; }       
+        public string Price { get; set; }
+        public string ViewQuoteLink { get; set; }
+
     }
 }

@@ -49,7 +49,7 @@ namespace Carly.Emails
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Email : " + ex);
+                    //Console.WriteLine("Email : " + ex);
                 }
             }
             return true;
