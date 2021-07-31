@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-	<text name="Principal" value="Principal" />
-	<text name="Voucher" value="Voucher" />
 	<text name="HomePage" value="Home page" />
     <text name="About" value="About" />
     <text name="WelcomeMessage" value="Welcome to Carly!" />
@@ -119,5 +117,73 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="UsersActivation">Users activation</text>
+	<text name="Principal">Principal</text>
+	<text name="PrincipalName">Principal Name</text>
+	<text name="CreateNewPrincipal">Create New Principal</text>
+	<text name="PrincipalDesc">Principal Description</text>
+	<text name="AddOn">Add On</text>
+	<text name="Description">Description</text>
+	<text name="Price">Price</text>
+	<text name="EditPrincipal">Edit Principal</text>
+	<text name="Voucher">Voucher</text>
+	<text name="VoucherName">Voucher Name</text>
+	<text name="VoucherCode">Voucher Code</text>
+	<text name="VoucherMinAmount">Voucher Minimum Amount</text>
+	<text name="VoucherDesc">Voucher Description</text>
+	<text name="VoucherStartDate">Voucher Start Date</text>
+	<text name="VoucherEndDate">Voucher End Date</text>
+	<text name="VoucherLimit">Voucher Limit</text>
+	<text name="VoucherType">Voucher Type</text>
+	<text name="Generate">Generate Vouchers</text>
+	<text name="CreateNewVoucher">Create New Voucher</text>
+	<text name="CodeAlreadyExist">This voucher code alreadt exists. Please use a different code.</text>
+	<text name="VoucherEnabled">Voucher Enabled</text>
+	<text name="VoucherDiscountAmount">Voucher Discount Amount</text>
+	<text name="VoucherPrincipal">Principal</text>
+	<text name="VoucherAddOn">Add On</text>
+	<text name="EditVoucher">Edit Voucher</text>
+	<text name="IsRedeemed">Is Redeemed</text>
+	<text name="GeneratedVouchers">Generated Vouchers</text>
+	<text name="Code">Code</text>
+	<text name="StartDate">Start Date</text>
+	<text name="EndDate">End Date</text>
+	<text name="Type">Type</text>
+	<text name="RedeemedByPackage">Package Redeeemed</text>
+	<text name="Package">Package</text>
+	<text name="NRIC">NRIC</text>
+	<text name="VechicleModel">Vehicle Model</text>
+	<text name="VehicleRegNo">Vehicle Registration No.</text>
+	<text name="VehicleYear">Vehicle Year</text>
+	<text name="CoverType">Cover Type</text>
+	<text name="Principals">Principals</text>
+	<text name="AddPrincipal">Add Principal</text>
+	<text name="GenLink">Generate Link</text>
+	<text name="GenEmail">Generate Email</text>
+	<text name="AddCustomerPrincipal">Add Principal</text>
+	<text name="PleaseSelectOne">Please Select One</text>
+	<text name="PremiumAmount">Premium Amount</text>
+	<text name="CreateNewPackage">Create New Package</text>
+	<text name="OwnerName">Name</text>
+	<text name="OwnerNRIC">NRIC</text>
+	<text name="OwnerEmail">Email</text>
+	<text name="OwnerPhoneNo">Mobile No.</text>
+	<text name="PolicyPeriod">Policy Period</text>
+	<text name="EditPackage">Edit Package</text>
+	<text name="EditCustomerPrincipal">Edit Principal</text>
+	<text name="EmailTo">Email To</text>
+	<text name="Subject">Subject</text>
+	<text name="Link">Link</text>
+	<text name="PrincipalDeleteWarningMessage">Principal {0} will be deleted.</text>
+	<text name="VoucherDeleteWarningMessage">Voucher {0} will be deleted.</text>
+	<text name="PackageDeleteWarningMessage">Package {0} will be deleted.</text>
+	<text name="SuccessfullyGenerated">Vouchers Generated Successfully!</text>
+	<text name="EmailedSuccesfully">Email Successfully Sent!</text>
+	<text name="CopiedSuccessfully">Link Copied to Clipboard!</text>
+	<text name="email">Send Email</text>
+	<text name="Sales">Order Transaction</text>
+	<text name="Address">Mailing Address</text>
+	<text name="AddOns">Add Ons</text>
+	<text name="Premium">Premium</text>
+	<text name="TransactionDateTime">Transaction Date Time</text>
   </texts>
 </localizationDictionary>
