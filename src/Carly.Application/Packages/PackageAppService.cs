@@ -1,6 +1,8 @@
 ﻿using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Carly.Authorization;
 using Carly.CustomerAddOns;
 using Carly.CustomerPrincipals;
@@ -17,7 +19,7 @@ using System.Threading.Tasks;
 namespace Carly.Packages
 {
     [AbpAuthorize(PermissionNames.Pages_Packages)]
-    public class PackageAppService : CrudAppService<Package, PackageDto>
+    public class PackageAppService : CrudAppService<Package, PackageDto, int, PagedPackageResultRequestDto>
     {
         private readonly IRepository<Package> _PackageRepository;
         private readonly IRepository<CustomerPrincipal> _CustomerPrincipalRepository;
@@ -133,6 +135,13 @@ namespace Carly.Packages
             tempContent.ViewQuoteLink = "https://system.carly.com.my/CarlyApp/?id=" + encryptedID;
 
             return tempContent;
+
+        }
+
+        protected override IQueryable<Package> CreateFilteredQuery(PagedPackageResultRequestDto input)
+        {
+            return Repository.GetAllIncluding()
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.VehicleRegNo.Contains(input.Keyword));
 
         }
     }

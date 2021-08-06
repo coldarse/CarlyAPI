@@ -37,6 +37,12 @@ namespace Carly.EncryptKeys
         public string signature { get; set; }
     }
 
+    public class getSaleDto
+    {
+        public string id { get; set; }
+        public string signature { get; set; }
+    }
+
     public class createSalesDto
     {
         public string package { get; set; }

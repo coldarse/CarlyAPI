@@ -14,6 +14,6 @@ namespace Carly.Vouchers
         public DateTime EndDate { get; set; }
         public bool isRedeemed { get; set; }
         public string Type { get; set; }
-        public int RedeemedByPackage { get; set; }
+        public string RedeemedByPackage { get; set; }
     }
 }

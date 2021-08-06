@@ -1744,8 +1744,8 @@ namespace Carly.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("RedeemedByPackage")
-                        .HasColumnType("int");
+                    b.Property<string>("RedeemedByPackage")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");

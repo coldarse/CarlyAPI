@@ -91,6 +91,39 @@ namespace Carly.Controllers
             _SaleRepository = SaleRepository;
         }
 
+        [HttpGet]
+        public bool GetSale(string getSale)
+        {
+
+            getSaleDto tempSale = JsonConvert.DeserializeObject<getSaleDto>(getSale);
+            string stringid = EncryptKey.Decrypt(tempSale.id);
+            string signature = tempSale.signature.Replace(" ", "+");
+
+            tempSale.signature = "";
+
+            string JSONString = JsonConvert.SerializeObject(tempSale, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            });
+
+            string encryptedString = EncryptKey.Encrypt(JSONString);
+
+            if (!Equals(encryptedString, signature)) { return false; }
+
+
+            List<Sale> tempListSale = _SaleRepository.GetAll().ToList();
+
+            foreach(var ts in tempListSale)
+            {
+                if(ts.Package.ToString() == stringid)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
 
         [HttpPost]
         public async Task<Sale> CreateSale(string sales)
@@ -157,6 +190,17 @@ namespace Carly.Controllers
 
             DateTime newClaimDate = Convert.ToDateTime(claimDate);
             List<GeneratedVoucher> tempGenVoucher = _GeneratedVoucherRepository.GetAll().ToList();
+            List<Package> tempPackage = _PackageRepository.GetAll().ToList();
+
+            string regno = "";
+            foreach(var p in tempPackage)
+            {
+                if(p.Id == packageid)
+                {
+                    regno = p.VehicleRegNo;
+                    break;
+                }
+            }
 
             foreach (var g in tempGenVoucher)
             {
@@ -165,7 +209,7 @@ namespace Carly.Controllers
                     if(newClaimDate >= g.StartDate && newClaimDate <= g.EndDate)
                     {
                         g.isRedeemed = true;
-                        g.RedeemedByPackage = packageid;
+                        g.RedeemedByPackage = regno;
                         await _GeneratedVoucherRepository.UpdateAsync(g);
                         return true;
                     }

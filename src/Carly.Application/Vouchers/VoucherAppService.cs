@@ -58,7 +58,7 @@ namespace Carly.Vouchers
                     if (newClaimDate >= g.StartDate && newClaimDate <= g.EndDate)
                     {
                         g.isRedeemed = true;
-                        g.RedeemedByPackage = packageid;
+                        g.RedeemedByPackage = packageid.ToString();
                         await _GeneratedVoucherRepository.UpdateAsync(g);
                         return true;
                     }
