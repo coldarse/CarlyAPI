@@ -173,7 +173,7 @@ namespace Carly.Controllers
         {
             RedeemVoucherDto tempredeemvoucher = JsonConvert.DeserializeObject<RedeemVoucherDto>(redeemvoucher);
             string vouchercode = tempredeemvoucher.vouchercode;
-            int packageid = tempredeemvoucher.packageid;
+            string packageid = EncryptKey.Decrypt(tempredeemvoucher.packageid);
             string claimDate = tempredeemvoucher.claimDate;
             string signature = tempredeemvoucher.signature.Replace(" ", "+");
 
@@ -195,7 +195,7 @@ namespace Carly.Controllers
             string regno = "";
             foreach(var p in tempPackage)
             {
-                if(p.Id == packageid)
+                if(p.Id.ToString() == packageid)
                 {
                     regno = p.VehicleRegNo;
                     break;

@@ -13,7 +13,7 @@ namespace Carly.EncryptKeys
     public class RedeemVoucherDto
     {
         public string vouchercode { get; set; }
-        public int packageid { get; set; }
+        public string packageid { get; set; }
         public string claimDate { get; set; }
         public string signature { get; set; }
     }
