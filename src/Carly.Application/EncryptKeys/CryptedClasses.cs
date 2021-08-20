@@ -55,5 +55,6 @@ namespace Carly.EncryptKeys
         public string city { get; set; }
         public string state { get; set; }
         public string signature { get; set; }
+        public string claimedvoucher { get; set; }
     }
 }

@@ -115,23 +115,44 @@ namespace Carly.Vouchers
                 Voucher tempVoucher = _VoucherRepository.FirstOrDefault(id);
                 int padno = tempVoucher.limit.ToString().Length;
 
-                for (int x = 1; x <= tempVoucher.limit; x++)
+                if (tempVoucher.description.ToLower().Contains("general"))
                 {
+                    string price = tempVoucher.minAmount.ToString();
                     GeneratedVoucher tempGenVoucher = new GeneratedVoucher();
-                    string paddedleft = x.ToString().PadLeft(padno, '0');
-                    tempGenVoucher.Code = tempVoucher.code + paddedleft;
+                    tempGenVoucher.Code = tempVoucher.code + price;
                     tempGenVoucher.StartDate = tempVoucher.startDate;
                     tempGenVoucher.EndDate = tempVoucher.stopDate;
                     tempGenVoucher.isRedeemed = false;
                     tempGenVoucher.Type = tempVoucher.type;
 
                     await _GeneratedVoucherRepository.InsertAsync(tempGenVoucher);
+
+                    tempVoucher.isGenerated = true;
+                    await _VoucherRepository.UpdateAsync(tempVoucher);
+
+                    return true;
+
                 }
+                else
+                {
+                    for (int x = 1; x <= tempVoucher.limit; x++)
+                    {
+                        GeneratedVoucher tempGenVoucher = new GeneratedVoucher();
+                        string paddedleft = x.ToString().PadLeft(padno, '0');
+                        tempGenVoucher.Code = tempVoucher.code + paddedleft;
+                        tempGenVoucher.StartDate = tempVoucher.startDate;
+                        tempGenVoucher.EndDate = tempVoucher.stopDate;
+                        tempGenVoucher.isRedeemed = false;
+                        tempGenVoucher.Type = tempVoucher.type;
 
-                tempVoucher.isGenerated = true;
-                await _VoucherRepository.UpdateAsync(tempVoucher);
+                        await _GeneratedVoucherRepository.InsertAsync(tempGenVoucher);
+                    }
 
-                return true;
+                    tempVoucher.isGenerated = true;
+                    await _VoucherRepository.UpdateAsync(tempVoucher);
+
+                    return true;
+                }
             }
             catch
             {

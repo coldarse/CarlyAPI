@@ -139,6 +139,7 @@ namespace Carly.Controllers
             string city = tempsales.city;
             string state = tempsales.state;
             string signature = tempsales.signature.Replace(" ", "+");
+            string claimedvoucher = tempsales.claimedvoucher;
 
             int tempPackage = Convert.ToInt32(EncryptKey.Decrypt(package));
 
@@ -164,6 +165,7 @@ namespace Carly.Controllers
             newSales.Postcode = postcode;
             newSales.City = city;
             newSales.State = state;
+            newSales.ClaimedVoucher = claimedvoucher;
 
             return await _SaleRepository.InsertAsync(newSales);
         }
@@ -202,16 +204,38 @@ namespace Carly.Controllers
                 }
             }
 
+            List<Voucher> tempVoucher = _VoucherRepository.GetAll().ToList();
+            bool isGeneral = false;
+            foreach(var v in tempVoucher)
+            {
+                if (vouchercode.ToLower().Contains(v.code.ToLower()))
+                {
+                    if (v.description.ToLower().Contains("general"))
+                    {
+                        isGeneral = true;
+                    }
+                }
+            }
+
+            
             foreach (var g in tempGenVoucher)
             {
                 if (g.Code.ToLower().Equals(vouchercode.ToLower()))
                 {
                     if(newClaimDate >= g.StartDate && newClaimDate <= g.EndDate)
                     {
-                        g.isRedeemed = true;
-                        g.RedeemedByPackage = regno;
-                        await _GeneratedVoucherRepository.UpdateAsync(g);
-                        return true;
+                        if(isGeneral == false)
+                        {
+                            g.isRedeemed = true;
+                            g.RedeemedByPackage = regno;
+                            await _GeneratedVoucherRepository.UpdateAsync(g);
+                            return true;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                        
                     }
                 }
             }
