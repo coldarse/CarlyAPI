@@ -10,6 +10,7 @@ using Carly.CustomerPrincipals;
 using Carly.CustomerAddOns;
 using Carly.Packages;
 using Carly.Sales;
+using Carly.LogoLinks;
 
 namespace Carly.EntityFrameworkCore
 {
@@ -23,6 +24,7 @@ namespace Carly.EntityFrameworkCore
         public DbSet<Package> Packages { get; set; }
         public DbSet<GeneratedVoucher> GeneratedVouchers { get; set; }
         public DbSet<Sale> Sales { get; set; }
+        public DbSet<LogoLink> LogoLinks { get; set; }
 
         /* Define a DbSet for each entity of the application */
 

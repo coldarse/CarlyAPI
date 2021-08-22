@@ -185,5 +185,8 @@
 	<text name="AddOns">Add Ons</text>
 	<text name="Premium">Premium</text>
 	<text name="TransactionDateTime">Transaction Date Time</text>
+	<text name="PolicyDuration">Policy Duration</text>
+	<text name="InvoiceNumber">Invoice Number</text>
+	<text name="PrincipalLogo">Principal Logo</text>
   </texts>
 </localizationDictionary>

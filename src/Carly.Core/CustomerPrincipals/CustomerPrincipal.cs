@@ -12,6 +12,7 @@ namespace Carly.CustomerPrincipals
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ImageLink { get; set; }
         public float Premium { get; set; }
         public List<CustomerAddOn> AddOns { get; set; }
         public int PackageId { get; set; }
