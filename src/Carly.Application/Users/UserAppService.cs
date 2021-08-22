@@ -261,7 +261,7 @@ namespace Carly.Users
                 + "<table border=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background:#fff; font-family:quicksand; font-size:18px; line-height:24px\">"
                 + "<tbody>"
                 + "<tr><td></td>"
-                + "<td width=\"600\" style=\"background:#21bcc1; background:transparent linear-gradient(0deg,#21bcc1 0%,#052375 100%) 0% 0% no-repeat padding-box; border-radius: 0 0 1rem 1rem\">"
+                + "<td width=\"600\" style=\"background:#fff; border-radius: 0 0 1rem 1rem\">"
                 + "<p style=\"text-align:center; margin: 15px 0\"><img src=\"{LogoImg}\" alt=\"Carly\" width=\"158\" height=\"73\" data-image-whitelisted=\"\" class=\"CToWUd\"></p>"
                 //+ "<p style=\"text-align:center; font-family:Quicksand; font-size:45px; line-height:1; margin: 15px 0 25px; color:#fff;\">Affordable Motor Insurance </p>"
                 + "</td>"
@@ -335,7 +335,8 @@ namespace Carly.Users
                 .Replace(@"{AddOns}", emailContentDto.AddOns)
                 .Replace(@"{ImageLink}", emailContentDto.ImageLink)
                 .Replace(@"{Price}", emailContentDto.Price)
-                .Replace(@"{ViewQuoteLink}", emailContentDto.ViewQuoteLink);
+                .Replace(@"{ViewQuoteLink}", emailContentDto.ViewQuoteLink)
+                .Replace(@"{LogoImg}", "https://www.carly.com.my/wp-content/uploads/2021/06/carly-logo-1.png");
 
             Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
 
