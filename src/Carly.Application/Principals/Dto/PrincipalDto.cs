@@ -14,6 +14,7 @@ namespace Carly.Principals.Dto
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
+		public string ImageLink { get; set; }
 		public List<AddOn> AddOns { get; set; }
 	}
 }

@@ -3,14 +3,16 @@ using System;
 using Carly.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carly.Migrations
 {
     [DbContext(typeof(CarlyDbContext))]
-    partial class CarlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210822082006_Added_ImageLink_To_Principals")]
+    partial class Added_ImageLink_To_Principals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1555,9 +1557,6 @@ namespace Carly.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ImageLink")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
@@ -1572,20 +1571,6 @@ namespace Carly.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("CustomerPrincipals");
-                });
-
-            modelBuilder.Entity("Carly.LogoLinks.LogoLink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogoLinks");
                 });
 
             modelBuilder.Entity("Carly.MultiTenancy.Tenant", b =>

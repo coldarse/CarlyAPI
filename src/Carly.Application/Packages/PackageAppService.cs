@@ -102,6 +102,7 @@ namespace Carly.Packages
             string tempPrinName = tempCustPrincipal.First().Name;
             float tempPrinPrice = tempCustPrincipal.First().Premium;
             int tempAddonCount = tempCustPrincipal.First().AddOns.Count;
+            string tempImageLink = tempCustPrincipal.First().ImageLink;
 
 
             for (int i = 1; i < tempCustPrincipal.Count; i++)
@@ -111,6 +112,7 @@ namespace Carly.Packages
                     tempPrinPrice = tempCustPrincipal[i].Premium;
                     tempPrinName = tempCustPrincipal[i].Name;
                     tempAddonCount = tempCustPrincipal[i].AddOns.Count;
+                    tempImageLink = tempCustPrincipal[i].ImageLink;
                 }
             }
 
@@ -125,7 +127,7 @@ namespace Carly.Packages
             {
                 tempContent.AddOns = "AVAILABLE";
             }
-            tempContent.ImageLink = "https://www.carly.com.my/wp-content/uploads/2021/06/allianz-logo-png-transparent.png";
+            tempContent.ImageLink = tempImageLink;
 
             float fpremium = (float)Math.Round(tempPrinPrice * 100f) / 100f;
             tempContent.Price = "RM " + fpremium.ToString();
