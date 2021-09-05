@@ -24,5 +24,8 @@ namespace Carly.Packages.Dto
         public string CoveragePeriod { get; set; }
         public List<CustomerPrincipalDto> Principals { get; set; }
         public string Status { get; set; }
+        public float Roadtax { get; set; }
+        public float Delivery { get; set; }
+        public float AdminFee { get; set; }
     }
 }

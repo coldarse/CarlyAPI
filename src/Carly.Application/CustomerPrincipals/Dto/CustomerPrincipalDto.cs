@@ -19,5 +19,12 @@ namespace Carly.CustomerPrincipals.Dto
         public float Premium { get; set; }
         public List<CustomerAddOnDto> AddOns { get; set; }
         public int PackageId { get; set; }
+        public float Loading1 { get; set; }
+        public float Loading2 { get; set; }
+        public float Excess { get; set; }
+        public float NCDA { get; set; }
+        public float NCDP { get; set; }
+        public float SumInsured { get; set; }
+        public float GrossPremium { get; set; }
     }
 }

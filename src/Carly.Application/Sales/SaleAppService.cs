@@ -23,7 +23,10 @@ namespace Carly.Sales
         public List<Sale> GetAllSale()
         {
             List<Sale> tempSale = Repository.GetAll().ToList();
-            return tempSale;
+
+            var orderbydesc = from s in tempSale orderby s.Id descending select s;
+
+            return orderbydesc.ToList();
         }
 
         //protected override IQueryable<Sale> CreateFilteredQuery(PagedSaleResultRequestDto input)

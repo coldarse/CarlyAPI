@@ -148,8 +148,8 @@
 	<text name="StartDate">Start Date</text>
 	<text name="EndDate">End Date</text>
 	<text name="Type">Type</text>
-	<text name="RedeemedByPackage">Package Redeeemed</text>
-	<text name="Package">Package</text>
+	<text name="RedeemedByPackage">Quotation Redeeemed</text>
+	<text name="Package">Quotation</text>
 	<text name="NRIC">NRIC</text>
 	<text name="VechicleModel">Vehicle Model</text>
 	<text name="VehicleRegNo">Vehicle Registration No.</text>
@@ -161,21 +161,21 @@
 	<text name="GenEmail">Generate Email</text>
 	<text name="AddCustomerPrincipal">Add Principal</text>
 	<text name="PleaseSelectOne">Please Select One</text>
-	<text name="PremiumAmount">Premium Amount</text>
-	<text name="CreateNewPackage">Create New Package</text>
+	<text name="PremiumAmount">Basic Premium (RM)</text>
+	<text name="CreateNewPackage">Create New Quotation</text>
 	<text name="OwnerName">Name</text>
 	<text name="OwnerNRIC">NRIC</text>
 	<text name="OwnerEmail">Email</text>
 	<text name="OwnerPhoneNo">Mobile No.</text>
 	<text name="PolicyPeriod">Policy Period</text>
-	<text name="EditPackage">Edit Package</text>
+	<text name="EditPackage">Edit Quotation</text>
 	<text name="EditCustomerPrincipal">Edit Principal</text>
 	<text name="EmailTo">Email To</text>
 	<text name="Subject">Subject</text>
 	<text name="Link">Link</text>
 	<text name="PrincipalDeleteWarningMessage">Principal {0} will be deleted.</text>
 	<text name="VoucherDeleteWarningMessage">Voucher {0} will be deleted.</text>
-	<text name="PackageDeleteWarningMessage">Package {0} will be deleted.</text>
+	<text name="PackageDeleteWarningMessage">Quotation {0} will be deleted.</text>
 	<text name="SuccessfullyGenerated">Vouchers Generated Successfully!</text>
 	<text name="EmailedSuccesfully">Email Successfully Sent!</text>
 	<text name="CopiedSuccessfully">Link Copied to Clipboard!</text>
@@ -188,5 +188,15 @@
 	<text name="PolicyDuration">Policy Duration</text>
 	<text name="InvoiceNumber">Invoice Number</text>
 	<text name="PrincipalLogo">Principal Logo</text>
+	<text name="SumInsured">Sum Insured</text>
+	<text name="Loading1">Loading 1 (RM)</text>
+	<text name="Loading2">Loading 2 (RM)</text>
+	<text name="Excess">Excess (RM)</text>
+	<text name="NCDAmount">NCD (RM)</text>
+	<text name="NCDPercentage">NCD (%)</text>
+	<text name="GrossPremium">Gross Premium (RM)</text>
+	<text name="Roadtax">Roadtax Renewal (RM)</text>
+	<text name="Delivery">MyEG and Delivery (RM)</text>
+	<text name="AdminFree">Admin Fee (RM)</text>
   </texts>
 </localizationDictionary>

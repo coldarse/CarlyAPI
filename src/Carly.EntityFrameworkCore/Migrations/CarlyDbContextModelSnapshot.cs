@@ -1555,8 +1555,26 @@ namespace Carly.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<float>("Excess")
+                        .HasColumnType("float");
+
+                    b.Property<float>("GrossPremium")
+                        .HasColumnType("float");
+
                     b.Property<string>("ImageLink")
                         .HasColumnType("longtext");
+
+                    b.Property<float>("Loading1")
+                        .HasColumnType("float");
+
+                    b.Property<float>("Loading2")
+                        .HasColumnType("float");
+
+                    b.Property<float>("NCDA")
+                        .HasColumnType("float");
+
+                    b.Property<float>("NCDP")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -1565,6 +1583,9 @@ namespace Carly.Migrations
                         .HasColumnType("int");
 
                     b.Property<float>("Premium")
+                        .HasColumnType("float");
+
+                    b.Property<float>("SumInsured")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -1656,11 +1677,17 @@ namespace Carly.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<float>("AdminFee")
+                        .HasColumnType("float");
+
                     b.Property<string>("CoverType")
                         .HasColumnType("longtext");
 
                     b.Property<string>("CoveragePeriod")
                         .HasColumnType("longtext");
+
+                    b.Property<float>("Delivery")
+                        .HasColumnType("float");
 
                     b.Property<string>("OwnerEmail")
                         .HasColumnType("longtext");
@@ -1673,6 +1700,9 @@ namespace Carly.Migrations
 
                     b.Property<string>("OwnerPhoneNo")
                         .HasColumnType("longtext");
+
+                    b.Property<float>("Roadtax")
+                        .HasColumnType("float");
 
                     b.Property<string>("Status")
                         .HasColumnType("longtext");

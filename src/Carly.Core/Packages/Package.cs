@@ -21,5 +21,8 @@ namespace Carly.Packages
         public string CoveragePeriod { get; set; }
         public List<CustomerPrincipal> Principals { get; set; }
         public string Status { get; set; }
+        public float Roadtax { get; set; }
+        public float Delivery { get; set; }
+        public float AdminFee { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -40,9 +41,12 @@ namespace Carly.Packages
             List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().ToList();
             List<Package> tempPackage = _PackageRepository.GetAll().ToList();
 
-            return tempPackage;
+            var orderbydesc = from p in tempPackage orderby p.Id descending select p; 
+
+            return orderbydesc.ToList();
         }
 
+        
         public Package GetPackageById(int id)
         {
             List<CustomerPrincipal> tempPrincipal = _CustomerPrincipalRepository.GetAll().Where(f => f.PackageId.ToString().Equals(id.ToString())).ToList();

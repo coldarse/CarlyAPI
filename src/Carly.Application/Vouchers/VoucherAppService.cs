@@ -19,6 +19,7 @@ namespace Carly.Vouchers
 
         private readonly IRepository<Voucher> _VoucherRepository;
         private readonly IRepository<GeneratedVoucher> _GeneratedVoucherRepository;
+        private static Random random = new Random();
         public VoucherAppService(IRepository<Voucher, int> repository,
             IRepository<Voucher> VoucherRepository,
             IRepository<GeneratedVoucher> GeneratedVoucherRepository) : base(repository)
@@ -107,6 +108,14 @@ namespace Carly.Vouchers
             }
         }
 
+        
+        private static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         [HttpPost]
         public async Task<bool> GenerateVouchers(int id) 
         {
@@ -119,7 +128,7 @@ namespace Carly.Vouchers
                 {
                     string price = tempVoucher.minAmount.ToString();
                     GeneratedVoucher tempGenVoucher = new GeneratedVoucher();
-                    tempGenVoucher.Code = tempVoucher.code + price;
+                    tempGenVoucher.Code = tempVoucher.code.ToUpper() + price;
                     tempGenVoucher.StartDate = tempVoucher.startDate;
                     tempGenVoucher.EndDate = tempVoucher.stopDate;
                     tempGenVoucher.isRedeemed = false;
@@ -137,8 +146,9 @@ namespace Carly.Vouchers
                 {
                     for (int x = 1; x <= tempVoucher.limit; x++)
                     {
+                        string rand = RandomString(2);
                         GeneratedVoucher tempGenVoucher = new GeneratedVoucher();
-                        string paddedleft = x.ToString().PadLeft(padno, '0');
+                        string paddedleft = x.ToString().ToUpper().PadLeft(padno, '0') + rand;
                         tempGenVoucher.Code = tempVoucher.code + paddedleft;
                         tempGenVoucher.StartDate = tempVoucher.startDate;
                         tempGenVoucher.EndDate = tempVoucher.stopDate;
