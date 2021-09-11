@@ -159,6 +159,7 @@
 	<text name="AddPrincipal">Add Principal</text>
 	<text name="GenLink">Generate Link</text>
 	<text name="GenEmail">Generate Email</text>
+	<text name="GenEmailReminder">Generate Email Reminder</text>
 	<text name="AddCustomerPrincipal">Add Principal</text>
 	<text name="PleaseSelectOne">Please Select One</text>
 	<text name="PremiumAmount">Basic Premium (RM)</text>
