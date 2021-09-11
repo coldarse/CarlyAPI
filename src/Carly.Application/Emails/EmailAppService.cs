@@ -26,6 +26,7 @@ namespace Carly.Emails
             {
                 MimeMessage email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(_settingManager.GetSettingValue("Abp.Net.Mail.DefaultFromAddress")));
+                email.Bcc.Add(MailboxAddress.Parse(_settingManager.GetSettingValue("Abp.Net.Mail.DefaultFromAddress")));
                 //foreach(string EmailAddr in EmailAddress)
                 //{
                 email.To.Add(MailboxAddress.Parse(EmailAddress));

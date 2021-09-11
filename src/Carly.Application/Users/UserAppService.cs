@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Carly.Emails;
 using System.IO;
+using Carly.Packages.Dto;
+using Carly.Packages;
 
 namespace Carly.Users
 {
@@ -36,6 +38,7 @@ namespace Carly.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
+        private readonly IRepository<Package> _package;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -44,7 +47,8 @@ namespace Carly.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager)
+            LogInManager logInManager,
+            IRepository<Package> package)
             : base(repository)
         {
             _userManager = userManager;
@@ -53,6 +57,7 @@ namespace Carly.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
+            _package = package;
         }
 
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -95,6 +100,9 @@ namespace Carly.Users
 
             return await GetAsync(input);
         }
+
+
+
 
         public override async Task DeleteAsync(EntityDto<long> input)
         {
@@ -344,7 +352,25 @@ namespace Carly.Users
 
             Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
 
-            return await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
+
+            bool isEmailSent = await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
+
+            if(isEmailSent)
+            {
+                List<Package> packageList = _package.GetAll().Where(x => x.VehicleRegNo == emailContentDto.VehicleRegistrationNumber).ToList();
+
+                foreach(var pack in packageList)
+                {
+                    pack.Status = DateTime.Now.ToString("yyyy-MM-dd");
+                }
+            }
+
+            return isEmailSent;
+
+            //return await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
+
+
+
         }
     }
 }
