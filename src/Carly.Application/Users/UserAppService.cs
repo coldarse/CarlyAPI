@@ -38,7 +38,7 @@ namespace Carly.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
-        private readonly IRepository<Package> _package;
+        private readonly IRepository<Package> _PackageRepository;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -48,7 +48,7 @@ namespace Carly.Users
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
             LogInManager logInManager,
-            IRepository<Package> package)
+            IRepository<Package> PackageRepository)
             : base(repository)
         {
             _userManager = userManager;
@@ -57,7 +57,7 @@ namespace Carly.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
-            _package = package;
+            _PackageRepository = PackageRepository;
         }
 
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -357,13 +357,120 @@ namespace Carly.Users
 
             if(isEmailSent)
             {
-                List<Package> packageList = _package.GetAll().Where(x => x.VehicleRegNo == emailContentDto.VehicleRegistrationNumber).ToList();
+                List<Package> packageList = _PackageRepository.GetAll().Where(x => x.VehicleRegNo == emailContentDto.VehicleRegistrationNumber).ToList();
 
                 foreach(var pack in packageList)
                 {
                     pack.Status = DateTime.Now.ToString("yyyy-MM-dd");
+                    await _PackageRepository.UpdateAsync(pack);
                 }
             }
+
+            return isEmailSent;
+
+            //return await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
+
+
+
+        }
+
+        public async Task<bool> SendEmailReminder(EmailContentDto emailContentDto)
+        {
+            //string FolderName = @"C:\inetpub\wwwroot\ASNBAPI\receipts";
+            //if (!System.IO.Directory.Exists(FolderName)) { System.IO.Directory.CreateDirectory(FolderName); }
+            //string filepath = FolderName + @"\" + emailContentDto.attachmentFileName;
+            //System.IO.File.WriteAllBytes(filepath, emailContentDto.attachment);
+
+            string EmailSubject = emailContentDto.Subject;
+            string EmailBody = "<html lang=\"en\">"
+                + "<table border=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background:#fff; font-family:quicksand; font-size:18px; line-height:24px\">"
+                + "<tbody>"
+                + "<tr><td></td>"
+                + "<td width=\"600\" style=\"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style=\"text-align:center; margin: 15px 0\"><img src=\"{LogoImg}\" alt=\"Carly\" width=\"158\" height=\"73\" data-image-whitelisted=\"\" class=\"CToWUd\"></p>"
+                //+ "<p style=\"text-align:center; font-family:Quicksand; font-size:45px; line-height:1; margin: 15px 0 25px; color:#fff;\">Affordable Motor Insurance </p>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td>"
+                + "<p style=\"text-align:center; font-family:quicksand; font-size:20px; line-height:1; margin: 15px 0 5px; color:#000;\">Hey {VehicleOwnerName}! It has been 14 Days since we last heard from you!</p>"
+                + "<p style=\"text-align:center; font-family:quicksand; font-size:18px; line-height:1; margin: 15px 0 1px; color:#000;\">Get the best insurance price with us now!</p>"
+                + "<tr><td></td>"
+                + "<td width=\"600\">"
+                + "<p style=\"margin: 20px 0\"></p>"
+                + "<div>"
+                + "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:580px; background-color:#f5f5f5; margin-left:10px; border:1px solid #d4d4d4; box-sizing:border-box; padding:10px 20px; border-radius: 0.5rem\">"
+                + "<tbody>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Vehicle Owner</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">{VehicleOwnerName}</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Vehicle Registration Number</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">{VehicleRegistrationNumber}</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">Coverage Period</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; border-bottom:1px solid #d4d4d4; padding:6px 0\">{CoveragePeriod}</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; padding:6px 0\">Add Ons</td>"
+                + "<td valign=\"top\" width=\"290\" style=\"width:290px; font-family:quicksand; font-size:16px; padding:6px 0\">{AddOns}</td>"
+                + "</tr>"
+                + "</tbody>"
+                + "</table>"
+                + "</div>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td width=\"600\">"
+                + "<p style=\"text-align:center; margin: 10px 0 5px;\"><img src=\"{ImageLink}\" alt=\"Insurance\" style=\"max-width: 40%\" data-image-whitelisted=\"\" class=\"CToWUd\"></p>"
+                + "<p style=\"font-family:quicksand; font-size:16px; text-align:center; line-height:1.5; margin:0;\">Lowest Premium</p>"
+                + "<p style=\"font-family:quicksand; font-size:30px; text-align:center; line-height:1; margin: 5px 0 5px;\">{Price}</p>"
+                + "<p style=\"font-family:quicksand; font-size:16px; text-align:center; line-height:1; margin: 0 0 25px;\"></p>"
+                + "</td>"
+                + "<td></td></tr>"
+                + "<tr><td></td>"
+                + "<td width=\"600\" style=\"background:#21bcc1; background:transparent linear-gradient(0deg,#052375 0%,#21bcc1 100%) 0% 0% no-repeat padding-box; padding: 35px 0px; border-radius: 1rem 1rem 0 0\">"
+                + "<div>"
+                + "<p style=\"text-align:center; margin: 0 0 25px;\"><a href=\"{ViewQuoteLink}\" style=\"background-color:#fff; outline-color:#483d8b; color:#00008B; font-family:quicksand; font-size:16px; padding:18px 35px; text-decoration:none; border-radius:35px; display:inline-block; line-height:1\" "
+                + "target=\"_blank\" data-saferedirecturl=\"\"> Compare Quotations </a></p>"
+                + "<p style=\"color:#fff; text-align:center; font-size:12px; line-height:1; margin:0 0 8px\"> Having trouble clicking the link? Click link below to check out our website&gt;</p>"
+                + "<p style=\"text-align:center; font-size:12px; line-height:1; margin:0 0 8px\"><a href=\"https://www.carly.com.my/\" style=\"color:#fff; text-decoration:underline\" target=\"_blank\">https://www.carly.com.my/</a></p>"
+                + "<p style=\"color:#fff; text-align:center; font-size:12px; line-height:1; margin:0 0 8px\"> or Contact us through</p>"
+                + "<p style=\"color:#fff; text-align:center; font-size:12px; line-height:1; margin:0 0 8px\"> 017-8656141</p>"
+                //+ "<p style=\"text-align:center; color:#fff\"> Pay With </p>"
+                + "</div>"
+                + "</tbody>"
+                + "</table>"
+                + "</html>";
+
+
+
+            string filepath = "";
+            //using streamreader for reading my htmltemplate   
+
+
+            //SK_KioskModule KioskModuleObj = _kioskModuleRepository.GetAsync(emailContentDto.Module).Result;
+            //if (!Equals(KioskModuleObj, null))
+            //{
+            //    EmailSubject = Equals(emailContentDto.language, "MS") ? KioskModuleObj.SubjectBM : KioskModuleObj.SubjectEN;
+            //    EmailBody = Equals(emailContentDto.language, "MS") ? KioskModuleObj.MessageBM : KioskModuleObj.MessageEN;
+            //    EmailBody = EmailBody.Replace(@"<Name>", emailContentDto.Name).Replace(@"<IC>", emailContentDto.IC).Replace(@"<UnitHolderID>", emailContentDto.UnitHolderID).Replace(@"<ModuleName>", KioskModuleObj.KM_Name).Replace(@"<TrxDate>", emailContentDto.TrxDate.ToString("dd-MMM-yyyy HH:mm:ss"));
+            //}
+            EmailBody = EmailBody.Replace(@"{VehicleOwnerName}", emailContentDto.VehicleOwnerName)
+                .Replace(@"{VehicleRegistrationNumber}", emailContentDto.VehicleRegistrationNumber)
+                .Replace(@"{CoveragePeriod}", emailContentDto.CoveragePeriod)
+                .Replace(@"{AddOns}", emailContentDto.AddOns)
+                .Replace(@"{ImageLink}", emailContentDto.ImageLink)
+                .Replace(@"{Price}", emailContentDto.Price)
+                .Replace(@"{ViewQuoteLink}", emailContentDto.ViewQuoteLink)
+                .Replace(@"{LogoImg}", "https://www.carly.com.my/wp-content/uploads/2021/06/carly-logo-1.png");
+
+            Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
+
+
+            bool isEmailSent = await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
 
             return isEmailSent;
 
