@@ -92,7 +92,7 @@ namespace Carly.Packages
         {
             string stringid = id.ToString();
             string encryptedID = EncryptKey.Encrypt(stringid);
-            string generatedLink = "https://system.carly.com.my/CarlyApp/quotations?id=" + encryptedID;
+            string generatedLink = "https://system.carly.com.my/CarlyApp/?id=" + encryptedID;
 
             return generatedLink;
         }
@@ -138,7 +138,7 @@ namespace Carly.Packages
 
             string stringid = id.ToString();
             string encryptedID = EncryptKey.Encrypt(stringid);
-            tempContent.ViewQuoteLink = "https://system.carly.com.my/CarlyApp/quotations?id=" + encryptedID;
+            tempContent.ViewQuoteLink = "https://system.carly.com.my/CarlyApp/?id=" + encryptedID;
 
             return tempContent;
 
