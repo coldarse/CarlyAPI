@@ -348,7 +348,7 @@ namespace Carly.Users
                 .Replace(@"{ImageLink}", emailContentDto.ImageLink)
                 .Replace(@"{Price}", emailContentDto.Price)
                 .Replace(@"{ViewQuoteLink}", emailContentDto.ViewQuoteLink)
-                .Replace(@"{LogoImg}", "https://www.carly.com.my/wp-content/uploads/2021/06/carly-logo-1.png");
+                .Replace(@"{LogoImg}", "https://system.carly.com.my/CarlyImage/carly-logo.png");
 
             Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
 
@@ -465,7 +465,7 @@ namespace Carly.Users
                 .Replace(@"{ImageLink}", emailContentDto.ImageLink)
                 .Replace(@"{Price}", emailContentDto.Price)
                 .Replace(@"{ViewQuoteLink}", emailContentDto.ViewQuoteLink)
-                .Replace(@"{LogoImg}", "https://www.carly.com.my/wp-content/uploads/2021/06/carly-logo-1.png");
+                .Replace(@"{LogoImg}", "https://system.carly.com.my/CarlyImage/carly-logo.png");
 
             Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
 
