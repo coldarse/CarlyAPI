@@ -3,14 +3,16 @@ using System;
 using Carly.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carly.Migrations
 {
     [DbContext(typeof(CarlyDbContext))]
-    partial class CarlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210929161245_Added_Payment_iPay88_Entity")]
+    partial class Added_Payment_iPay88_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

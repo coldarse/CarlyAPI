@@ -11,6 +11,8 @@ using Carly.CustomerAddOns;
 using Carly.Packages;
 using Carly.Sales;
 using Carly.LogoLinks;
+using Carly.iPay88s;
+using Carly.Payments;
 
 namespace Carly.EntityFrameworkCore
 {
@@ -25,6 +27,8 @@ namespace Carly.EntityFrameworkCore
         public DbSet<GeneratedVoucher> GeneratedVouchers { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<LogoLink> LogoLinks { get; set; }
+        public DbSet<iPay88> IPay88s { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         /* Define a DbSet for each entity of the application */
 
