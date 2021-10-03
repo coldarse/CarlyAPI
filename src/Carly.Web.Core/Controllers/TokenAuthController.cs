@@ -139,38 +139,10 @@ namespace Carly.Controllers
         }
 
         [HttpPost]
-        public async Task<iPay88> InsertiPay88Response(string iPay88Response)
+        public async Task<iPay88> InsertiPay88Response(iPay88 iPay88Response)
         {
-            iPay88ResponseDto tempResponse = JsonConvert.DeserializeObject<iPay88ResponseDto>(iPay88Response);
-            string carly_signature = tempResponse.carly_signature.Replace(" ", "+");
 
-            tempResponse.carly_signature = "";
-
-            string JSONString = JsonConvert.SerializeObject(tempResponse, new JsonSerializerSettings()
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-            });
-
-            string encryptedString = EncryptKey.Encrypt(JSONString);
-
-            if (!Equals(encryptedString, carly_signature)) { return new iPay88(); }
-
-            iPay88 newPayment = new iPay88();
-            newPayment.MerchantCode = tempResponse.MerchantCode;
-            newPayment.PaymentId = tempResponse.PaymentId;
-            newPayment.RefNo = tempResponse.RefNo;
-            newPayment.Amount = tempResponse.Amount;
-            newPayment.Currency = tempResponse.Currency;
-            newPayment.Remark = tempResponse.Remark;
-            newPayment.TransId = tempResponse.TransId;
-            newPayment.AuthCode = tempResponse.AuthCode;
-            newPayment.Status = tempResponse.Status;
-            newPayment.ErrDesc = tempResponse.ErrDesc;
-            newPayment.Signature = tempResponse.Signature;
-            newPayment.CCName = tempResponse.CCName;
-            newPayment.CCNo = tempResponse.CCNo;
-            newPayment.S_bankname = tempResponse.S_bankname;
-            newPayment.S_country = tempResponse.S_country;
+            iPay88 newPayment = iPay88Response;
 
             return await _iPay88Repository.InsertAsync(newPayment);
         }
