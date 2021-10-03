@@ -439,7 +439,35 @@ namespace Carly.Controllers
             {
                 if (vouchercode.ToLower().Contains(d.code.ToLower().ToString()))
                 {
-                    string temp = vouchercode.ToUpper().Replace(d.code.ToUpper().ToString(), "");
+
+                    if (d.limit == 1)
+                    {
+                        if (newclaimDate >= d.startDate && newclaimDate <= d.stopDate)
+                        {
+                            tempIsValid.isValid = true;
+                            tempIsValid.Type = d.type;
+                            tempIsValid.minAmount = d.minAmount;
+                            tempIsValid.discountAmount = d.discountAmount;
+                            tempIsValid.giftId = d.giftId;
+                            tempIsValid.reason = "Success";
+
+                            return tempIsValid;
+                        }
+                        else
+                        {
+                            tempIsValid.isValid = false;
+                            tempIsValid.Type = "";
+                            tempIsValid.minAmount = 0.00f;
+                            tempIsValid.discountAmount = 0.00f;
+                            tempIsValid.giftId = 0;
+                            tempIsValid.reason = "Voucher Expired/Not yet activated";
+
+                            return tempIsValid;
+                        }
+                    }
+
+                    string substringed = vouchercode.Substring(0, vouchercode.Length - 2);
+                    string temp = substringed.ToUpper().Replace(d.code.ToUpper().ToString(), "");
                     int limit = 0;
                     bool isSucceed = Int32.TryParse(temp, out limit);
                     if (isSucceed)
