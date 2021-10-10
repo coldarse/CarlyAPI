@@ -18,5 +18,15 @@ namespace Carly.iPay88s
         public iPay88AppService(IRepository<iPay88, int> repository) : base(repository)
         {
         }
+
+        public List<iPay88> GetAlliPay88()
+        {
+            List<iPay88> tempiPay = Repository.GetAll().ToList();
+
+            var orderbydesc = from s in tempiPay orderby s.Id descending select s;
+
+            return orderbydesc.ToList();
+        }
+
     }
 }

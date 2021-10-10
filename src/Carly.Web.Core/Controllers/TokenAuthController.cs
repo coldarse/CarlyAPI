@@ -139,12 +139,23 @@ namespace Carly.Controllers
         }
 
         [HttpPost]
-        public async Task<iPay88> InsertiPay88Response(iPay88 iPay88Response)
+        public async Task<string> InsertiPay88Response(iPay88 iPay88Response)
         {
 
             iPay88 newPayment = iPay88Response;
 
-            return await _iPay88Repository.InsertAsync(newPayment);
+            iPay88 tempInsert = await _iPay88Repository.InsertAsync(newPayment);
+
+            if(tempInsert != null)
+            {
+                return "RECEIVEOK";
+            }
+            else
+            {
+                return "FAIL";
+            }
+
+            
         }
 
         [HttpGet]
