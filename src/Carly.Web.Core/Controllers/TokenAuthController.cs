@@ -328,6 +328,19 @@ namespace Carly.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult iPay88Redirect(iPay88 iPay88Response)
+        {
+            if (iPay88Response.Status == "1")
+            {
+                return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
+            }
+            else
+            {
+                return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
+            }
+        }
+
         [HttpGet]
         public Package GetPackageById(string getpackagebyid)
         {
