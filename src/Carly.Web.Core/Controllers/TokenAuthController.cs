@@ -32,10 +32,12 @@ using Carly.Sales;
 using Carly.Sales.Dto;
 using Carly.iPay88s;
 using Carly.Payments;
+using Abp.Web.Models;
 
 namespace Carly.Controllers
 {
     [Route("api/[controller]/[action]")]
+    //[DontWrapResult(WrapOnError = false, WrapOnSuccess = false)]
     public class TokenAuthController : CarlyControllerBase
     {
         private readonly LogInManager _logInManager;
@@ -139,6 +141,7 @@ namespace Carly.Controllers
         }
 
         [HttpPost]
+        [WrapResult(WrapOnError = false, WrapOnSuccess = false)]
         public async Task<string> InsertiPay88Response(iPay88 iPay88Response)
         {
 
