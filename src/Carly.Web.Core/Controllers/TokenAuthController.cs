@@ -340,7 +340,7 @@ namespace Carly.Controllers
             }
             else
             {
-                return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
+                return Redirect("https://system.carly.com.my/CarlyApp/#/failorder");
             }
         }
 
