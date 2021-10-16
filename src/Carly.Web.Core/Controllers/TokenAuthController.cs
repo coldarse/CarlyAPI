@@ -332,7 +332,7 @@ namespace Carly.Controllers
 
 
         [HttpPost]
-        public IActionResult iPay88Redirect(iPay88 iPay88Response)
+        public async Task<IActionResult> iPay88Redirect(iPay88 iPay88Response)
         {
             if (iPay88Response.Status == "1")
             {
@@ -340,6 +340,10 @@ namespace Carly.Controllers
             }
             else
             {
+                iPay88 newPayment = iPay88Response;
+
+                iPay88 tempInsert = await _iPay88Repository.InsertAsync(newPayment);
+
                 return Redirect("https://system.carly.com.my/CarlyApp/#/failorder");
             }
         }
