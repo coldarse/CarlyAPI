@@ -209,6 +209,7 @@ namespace Carly.Controllers
             string state = tempsales.state;
             string signature = tempsales.signature.Replace(" ", "+");
             string claimedvoucher = tempsales.claimedvoucher;
+            string referenceno = tempsales.referenceno;
 
             int tempPackage = Convert.ToInt32(EncryptKey.Decrypt(package));
 
@@ -235,6 +236,7 @@ namespace Carly.Controllers
             newSales.City = city;
             newSales.State = state;
             newSales.ClaimedVoucher = claimedvoucher;
+            newSales.ReferenceNo = referenceno;
 
             return await _SaleRepository.InsertAsync(newSales);
         }
@@ -326,6 +328,7 @@ namespace Carly.Controllers
         public int testDecrypt(string encryptedID)
         {
             string stringid = EncryptKey.Decrypt(encryptedID);
+            //string id = stringid;
             int id = Convert.ToInt32(stringid);
             return id;
         }

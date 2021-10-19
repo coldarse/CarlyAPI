@@ -56,6 +56,7 @@ namespace Carly.EncryptKeys
         public string state { get; set; }
         public string signature { get; set; }
         public string claimedvoucher { get; set; }
+        public string referenceno { get; set; }
     }
 
     public class iPay88ResponseDto

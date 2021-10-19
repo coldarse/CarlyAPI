@@ -20,6 +20,7 @@ namespace Carly.Sales
         public string City { get; set; }
         public string State { get; set; }
         public string ClaimedVoucher { get; set; }
+        public string ReferenceNo { get; set; }
 
     }
 }
