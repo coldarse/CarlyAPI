@@ -13,6 +13,7 @@
         public const string Pages_Packages = "Pages.Packages";
         public const string Pages_GeneratedVouchers = "Pages.GeneratedVouchers";
         public const string Pages_Sales = "Pages.Sales";
+        public const string Pages_PaymentGateway = "Pages.PaymentGateWay";
 
     }
 }

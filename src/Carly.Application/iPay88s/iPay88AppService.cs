@@ -9,15 +9,25 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Carly.Authorization;
 using Carly.iPay88s.Dto;
 
 namespace Carly.iPay88s
 {
-    public class iPay88AppService : CrudAppService<iPay88, iPay88Dto>
+    [AbpAuthorize(PermissionNames.Pages_PaymentGateway)]
+    public class iPay88AppService : CrudAppService<iPay88, iPay88Dto, int, PagediPay88ResultRequestDto>
     {
         public iPay88AppService(IRepository<iPay88, int> repository) : base(repository)
         {
         }
+
+        protected override IQueryable<iPay88> CreateFilteredQuery(PagediPay88ResultRequestDto input)
+        {
+            return Repository.GetAllIncluding()
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.RefNo.Contains(input.Keyword));
+
+        }
+
 
         public List<iPay88> GetAlliPay88()
         {
@@ -27,6 +37,8 @@ namespace Carly.iPay88s
 
             return orderbydesc.ToList();
         }
+
+        
 
     }
 }
