@@ -52,4 +52,65 @@ namespace Carly.Users.Dto
         public string ViewQuoteLink { get; set; }
 
     }
+
+    public class SalesReceiptContentDto
+    {
+        public string Subject { get; set; }
+        public string emailTo { get; set; }
+        public string VehicleOwnerName { get; set; }
+        public string VehicleICNumber { get; set; }
+        public string VehicleOwnerAddress { get; set; }
+        public string VehicleRegistrationNumber { get; set; }
+        public string Insurer { get; set; }
+        public string InvoiceNo { get; set; }
+        public string CoveragePeriod { get; set; }
+        public string TypeOfCover { get; set; }
+        public string SumInsured { get; set; }
+        public string TransactionDate { get; set; }
+        public string CardHolderName { get; set; }
+        public string AuthCode { get; set; }
+        public string PaymentMethod { get; set; }
+        public string BasicPremium { get; set; }
+        public string loading1 { get; set; }
+        public string loading2 { get; set; }
+        public string NCD { get; set; }
+        public string AddOns1 { get; set; }
+        public string AddOns1Price { get; set; }      
+        public string AddOns2 { get; set; }
+        public string AddOns2Price { get; set; }
+        public string AddOns3 { get; set; }
+        public string AddOns3Price { get; set; }
+        public string AddOns4 { get; set; }
+        public string AddOns4Price { get; set; }
+        public string AddOns5 { get; set; }
+        public string AddOns5Price { get; set; }
+        public string AddOns6 { get; set; }
+        public string AddOns6Price { get; set; }
+        public string AddOns7 { get; set; }
+        public string AddOns7Price { get; set; }
+        public string AddOns8 { get; set; }
+        public string AddOns8Price { get; set; }
+        public string AddOns9 { get; set; }
+        public string AddOns9Price { get; set; }
+        public string AddOns10 { get; set; }
+        public string AddOns10Price { get; set; }
+        public string AddOns11 { get; set; }
+        public string AddOns11Price { get; set; }
+        public string AddOns12 { get; set; }
+        public string AddOns12Price { get; set; }
+        public string AddOns13 { get; set; }
+        public string AddOns13Price { get; set; }
+        public string AddOns14 { get; set; }
+        public string AddOns14Price { get; set; }
+        public string AddOns15 { get; set; }
+        public string AddOns15Price { get; set; }
+        public string GrossPremium { get; set; }
+        public string ServiceTax { get; set; }
+        public string StampDuty { get; set; }
+        public string AdminFee { get; set; }
+        public string MyegDelivery { get; set; }
+        public string RoadTaxRenewal { get; set; }
+        public string TotalPayablePremium { get; set; }
+        public string LogoImg { get; set; }
+    }
 }

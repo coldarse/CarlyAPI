@@ -206,7 +206,7 @@ namespace Carly.Users
             {
                 throw new Exception("There is no current user!");
             }
-            
+
             if (await _userManager.CheckPasswordAsync(user, input.CurrentPassword))
             {
                 CheckErrors(await _userManager.ChangePasswordAsync(user, input.NewPassword));
@@ -228,19 +228,19 @@ namespace Carly.Users
             {
                 throw new UserFriendlyException("Please log in before attempting to reset password.");
             }
-            
+
             var currentUser = await _userManager.GetUserByIdAsync(_abpSession.GetUserId());
             var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
             if (loginAsync.Result != AbpLoginResultType.Success)
             {
                 throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
             }
-            
+
             if (currentUser.IsDeleted || !currentUser.IsActive)
             {
                 return false;
             }
-            
+
             var roles = await _userManager.GetRolesAsync(currentUser);
             if (!roles.Contains(StaticRoleNames.Tenants.Admin))
             {
@@ -330,7 +330,7 @@ namespace Carly.Users
 
 
 
-                 string filepath = "";
+            string filepath = "";
             //using streamreader for reading my htmltemplate   
 
 
@@ -355,11 +355,11 @@ namespace Carly.Users
 
             bool isEmailSent = await emailAppService.SendEmailAsync(emailContentDto.emailTo, EmailSubject, EmailBody, filepath);
 
-            if(isEmailSent)
+            if (isEmailSent)
             {
                 List<Package> packageList = _PackageRepository.GetAll().Where(x => x.VehicleRegNo == emailContentDto.VehicleRegistrationNumber).ToList();
 
-                foreach(var pack in packageList)
+                foreach (var pack in packageList)
                 {
                     pack.Status = DateTime.Now.ToString("yyyy-MM-dd");
                     await _PackageRepository.UpdateAsync(pack);
@@ -479,6 +479,485 @@ namespace Carly.Users
 
 
         }
+
+        public async Task<bool> SendSalesReceiptEmail(SalesReceiptContentDto salesReceiptContentDto)
+        {
+            string EmailSubject = salesReceiptContentDto.Subject;
+            string EmailBody = "<html lang =\"en\">"
+                + "<table border =\"0\" cellspacing =\"0\" width =\"100%\" "
+                + "style =\"background:#fff; font-family:quicksand; font-size:18px; line-height:24px\"> "
+                + "<tbody><tr>"
+                + "<td bgcolor =\"#ffffff\" >"
+                + "<table width =\"600\" align = \"center\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\" bgcolor = \"#ffffff\"> "
+                + "<tbody><tr>"
+                //+ "<td valign = \"top\" width = \"45\" ></td>"
+                + "<td valign = \"top\" style = \"font-family:quicksand; color:#000000; font-size:11px\">"
+                + "<table width = \"100%\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\">"
+                + "<tbody><tr>"
+                + "<td width = \"600\" style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"text-align:center; margin: 10px 0\">"
+                + "<img src = \"{LogoImg}\" alt = \"Carly\" width = \"158\" height = \"73\" data-image-whitelisted = \"\" class =\"CToWUd\"/>"
+                + "</p></td>"
+                + "<td width = \"600\" style=\"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"text-align:left; margin: 1px 0\">My Works Sdn Bhd(1340955 - H)</p>"
+                + "<p style = \"text-align:left; margin: 1px 0\">No. 1, Solok Sultan Mohamed 1,</p>"
+                + "<p style = \"text-align:left; margin: 1px 0\">Pusat Perdagangan Bandar Sultan Saleiman 4,</p>"
+                + "<p style = \"text-align:left; margin: 1px 0\">42000 Port Klang, Selangor.</p>"
+                + "<p style = \"text-align:left; margin: 1px 0\">T: +6017 - 865 6141</p>"
+                + "<p style = \"text-align:left; margin: 1px 0\">E: hello @carly.com.my</p>"
+                + "</td></tr>"
+                + "<tr><td width = \"600\" style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"text-align:right; font-family:quicksand; font-size:32px; line-height:20px; font-weight:bold; color:#00008B;\">INVOICE</p>"
+                + "</td></tr>"
+                + "</tbody></table>"
+                + "<tbody><tr><td>"
+                + "<table width = \"100%\" border= \"0\" cellspacing= \"0\" cellpadding= \"0\">"
+                + "<tbody><tr><td style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 100px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold\">Onwer</p>"
+                + "</td><td style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 400px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold; overflow-wrap: break-word;\">{VehicleOwnerName}</p>"
+                + "</td></tr>"
+                + "<tr><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 100px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold\">ID Number</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 400px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold; overflow-wrap: break-word;\">{VehicleICNumber}</p>"
+                + "</td></tr>"
+                + "<tr><td style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 100px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold\">Address</p>"
+                + "</td><td style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 400px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold; overflow-wrap: break-word;\">{VehicleOwnerAddress}</p>"
+                + "</td></tr>"
+                + "</tbody></table>"
+                + "<table width = \"100%\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\">"
+                + "<td valign = \"top\" width= \"45\" ></td>"
+                + "<tr><td style= \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">Vehicle Reg.No.</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{VehicleRegistrationNumber}</p>"
+                + "</td><td><p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">Insurer</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">{Insurer}</p>"
+                + "</td></tr><tr><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">Sum Insured</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style= \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{SumInsured}</p>"
+                + "</td><td><p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">Type of Cover</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{TypeOfCover}</p>"
+                + "</td></tr>"
+                + "<tr><td><p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">Invoice no</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{InvoiceNo}</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">Period of Cover</p>"
+                + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
+                + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{CoveragePeriod}</p>"
+                + "</td></tr></table>"
+                + "</td></tr></tbody></td><td valign = \"top\" width= \"45\"></td></tr></tbody></table>"
+                + "<table width = \"600\" align = \"center\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\" bgcolor = \"#f4f4f4\">"
+                + "<tbody><tr><td valign = \"top\" width = \"45\"></td><td align = \"center\" valign = \"top\">"
+                + "<table border = \"0\" cellspacing = \"0\" cellpadding = \"0\" width = \"100%\">"
+                + "<tbody><tr><td align = \"left\" height = \"20\"></td>"
+                + "</tr></tbody></table>"
+                + "<table border = \"0\" cellspacing = \"0\" cellpadding = \"0\" width = \"100%\">"
+                + "<tbody><tr><td width = \"55%\" align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold; color:#00af41\"></td></tr></tbody></table>"
+                + "<table width = \"100%\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\">"
+                + "<tbody><tr><td valign = \"top\" width = \"207\" style = \"max-width:207px; display:block\">"
+                + "<table width = \"100%\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\">"
+                + "<tbody><tr><td align = \"left\" valign = \"top\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">Transaction Details</td>"
+                + "</tr><tr><td align = \"center\" valign = \"middle\" height = \"10\"></td></tr>"
+                + "<tr><td valign = \"top\">"
+                + "<table width = \"100%\" border = \"0\" cellpadding = \"0\" cellspacing = \"0\">"
+                + "<tbody><tr><td align = \"left\" valign = \"top\" style = \"padding:0cm 0cm 0cm 0cm\">"
+                + "<table width = \"100%\" border = \"0\" cellpadding = \"0\" cellspacing = \"0\">"
+                + "<tbody><tr><td valign = \"top\">"
+                + "<table width = \"100%\" border = \"0\" cellspacing = \"0\" cellpadding = \"0\">"
+                + "<tbody><tr><td align = \"left\" valign = \"top\">"
+                + "<table border = \"0\" cellspacing = \"0\" cellpadding = \"0\" width = \"100%\">"
+                + "<tbody><tr><td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:12px; color:#9e9e9e; line-height:16px\">Transaction Date</span><br/>"
+                + "<span style = \"font-family:quicksand; font-size:12px;line-height:16px;font-weight:bold\">{TransactionDate}</span>"
+                + "</td></tr></tbody></table></td></tr><tr></tr><tr><td align = \"left\" valign = \"top\">"
+                + "<table border = \"0\" cellspacing = \"0\" cellpadding=\"0\" width=\"100%\">"
+                + "<tbody><tr><td align = \"left\" style = \"font-family:quicksand; font-size:14px;font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:12px; color:#9e9e9e; line-height:14px\">Cardholder's Name</span><br />"
+                + "<span style = \"font-family:quicksand; font-size:12px; line-height:16px; font-weight:bold\">{CardHolderName}</span>"
+                + "</td></tr></tbody></table></td></tr>"
+                + "<tr><td align = \"left\" valign =\"top\"><table border = \"0\" cellspacing =\"0\" cellpadding=\"0\" width=\"100%\">"
+                + "<tbody><tr><td align = \"left\" style =\"font-family:quicksand; font-size:14px;font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:12px; color:#9e9e9e; line-height:14px\">Authorization Code</span><br/>"
+                + "<span style = \"font-family:quicksand; font-size:12px; line-height:16px; font-weight:bold\">{AuthCode}</span>"
+                + "</td></tr></tbody></table></td></tr>"
+                + "<tr><td height =\"3\"></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>"
+                + "</td></tr></tbody></table></td><td valign = \"top\" width=\"9\"></td><td valign = \"top\" width=\"10\" bgcolor=\"#f5f5f3\"></td>"
+                + "<td valign = \"top\" width=\"280\" style=\"max-width:280px\">"
+                + "<table width = \"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
+                + "<tbody><tr><td align = \"left\" valign=\"top\" style=\"font-family:quicksand; font-size:14px; font-weight:bold;\">Receipt Summary</td></tr>"
+                + "<tr><td align = \"center\" valign= \"middle\" height= \"10\" ></td></tr>"
+                + "<tr><td valign = \"top\">"
+                + "<table width =\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\" style=\"border:1px solid #dddddd\">"
+                + "<tbody><tr><td align = \"left\" valign=\"top\" style=\"padding:0cm 0cm 0cm 0cm\">"
+                + "<table width = \"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">"
+                + "<tbody><tr><td valign = \"top\" ><table width =\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
+                + "<tbody><tr><td align = \"left\" valign=\"top\"><table border = \"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">"
+                + "<tr><td height = \"10px\" align=\"left\"></td><td height = \"10px\" colspan=\"2\" align=\"left\"></td><td height = \"10px\" align=\"left\"></td></tr>"
+                + "<tbody><tr><td height = \"5px\" align=\"left\"></td><td height = \"5px\" colspan=\"2\" align=\"left\" style=\"font-family:quicksand; font-size:11px;line-height:18px; color:#9e9e9e\">"
+                + "Payment Method:<br /><span style = \"font-weight:bold;color:#000000\"> {PaymentMethod}&nbsp;&nbsp;</span></td>"
+                + "<td height = \"5px\" align=\"left\"></td></tr><tr><td height = \"5px\" align =\"left\"></td><td height = \"5px\" colspan =\"2\" align =\"left\"></td>"
+                + "<td height = \"5px\" align =\"left\"></td></tr>"
+                + "<tr><td height = \"3px\" align =\"left\"></td><td height = \"3px\" colspan =\"2\" align =\"left\" style =\"border-top:1px dashed #9e9e9e\"></td>"
+                + "<td height = \"3px\" align =\"left\"></td></tr>"
+                + "<tr><td align = \"left\" width =\"15\"></td><td width = \"171\" align =\"left\" style =\"font-family:quicksand; font-weight:normal; color:#000000\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; color:#9e9e9e; line-height:21px\"> Description:</span></td>"
+                + "<td width = \"80\" align =\"left\" style =\"font-family:quicksand; font-weight:normal; color:#000000\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; color:#9e9e9e; line-height:28px\"> &nbsp; &nbsp; &nbsp; &nbsp; Amount:</span></td>"
+                + "<td align = \"left\" width =\"15\"></td></tr>"
+                + "<tr><td height = \"3px\" align =\"left\"></td>"
+                + "<td height = \"3px\" colspan =\"2\" align =\"left\"></td>"
+                + "<td height = \"3px\" align =\"left\"></td></tr>"
+                + "<tr><td height = \"5px\" align =\"left\"></td><td height = \"5px\" colspan =\"2\" align =\"left\" style =\"border-top:1px dashed #9e9e9e\"></td>"
+                + "<td height = \"5px\" align =\"left\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"></span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; font-weight:bold\"> Basic Premium</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; font-weight:bold\"> &nbsp; &nbsp; &nbsp; &nbsp; RM 1,265.91 </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; + Loading 1 </span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {loading1}</span></td>"
+                + "<td align = \"right\" width =\"15\"></td><td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp;</span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; + Loading 2</span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {loading2} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; - No Claim Discount (NCD 45 %) </span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {NCD} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\">&nbsp; &nbsp;</span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr><td align = \"right\" width =\"15\"></td><td align = \"right\">&nbsp;</td>"
+                + "<td align = \"right\">&nbsp;</td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\">"
+                + "<td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"></span>"
+                + "<span style = \"font-family:quicksand; font-size:11px;font-weight:bold\"> Selected Add Ons:</span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp;</span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>";
+
+            if (salesReceiptContentDto.AddOns1.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns1}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns1Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns2.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns2}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns2Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns3.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns3}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns3Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns4.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns4}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns4Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns5.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns5}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns5Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns6.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns6}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns6Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns7.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns7}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns7Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns8.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns8}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns8Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns9.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns9}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns9Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns10.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns10}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns10Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns11.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns11}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns11Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns12.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns12}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns12Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns13.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns13}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns13Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns14.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns14}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns14Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+            if (salesReceiptContentDto.AddOns15.Length > 0)
+            {
+                EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp; {AddOns15}</span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns15Price} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+
+
+            EmailBody += "<td align = \"right\" width =\"15\"></td><td align = \"right\">&nbsp;</td>"
+                + "<td align = \"right\"> &nbsp;</td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"></span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; font-weight:bold\"> Gross Premium </span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:11px; line-height:18px\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {GrossPremium} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; Server Tax @ 6 %</span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px;font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {ServiceTax} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; Stamp Duty </span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px;font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {StampDuty} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr>"
+                + "<td align = \"right\" width =\"15\"></td>"
+                + "<td align = \"right\">&nbsp;</td>"
+                + "<td align = \"right\">&nbsp;</td>"
+                + "<td align = \"right\" width =\"15\"></td>"
+                + "</tr>"
+                + "<tr style = \"color:#000000\">"
+                + "<td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; Admin Fee </span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {AdminFee} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; MyEG + Delivery </span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {MyegDelivery} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\"width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp;</span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; Roadtax Renewal </span></td>"
+                + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px;font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px;line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {RoadTaxRenewal} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr>"
+                + "<tr><td height = \"10px\" align =\"left\"></td>"
+                + "<td height = \"10px\" colspan =\"2\" align =\"left\"></td>"
+                + "<td height = \"10px\" align =\"left\"></td></tr>"
+                + "<tr><td height = \"10px\" align =\"left\"></td>"
+                + "<td height = \"10px\" colspan =\"2\" align =\"left\" style =\"border-top:1px dashed #9e9e9e\"></td>"
+                + "<td height = \"10px\" align =\"left\"></td></tr>"
+                + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"></span>"
+                + "<span style = \"font-family:quicksand; font-size:11px; font-weight:bold\"> Total Payable Premium </span></td>"
+                + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp; {TotalPayablePremium} </span></td>"
+                + "<td align = \"right\" width =\"15\"></td></tr></tbody>"
+                + "</table></td></tr>"
+                + "<tr><td align = \"left\" valign =\"top\">"
+                + "<table border = \"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">"
+                + "<tbody><tr><td align = \"left\" style=\"font-family:quicksand; font-size:15px; font-weight:bold;\"></td></tr></tbody>"
+                + "</table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody>"
+                + "</table></td></tr></tbody></table><table border = \"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"
+                + "<tbody><tr><td height = \"20\"></td></tr></tbody>"
+                + "</table></td><td valign=\"top\" width=\"45\">"
+                + "</td></tr></tbody></table></td></tr></tbody></table></html>";
+
+
+            string filepath = "";
+
+            EmailBody = EmailBody.Replace(@"{VehicleOwnerName}", salesReceiptContentDto.VehicleOwnerName)
+                .Replace(@"{VehicleICNumber}", salesReceiptContentDto.VehicleICNumber)
+                .Replace(@"{VehicleOwnerAddress}", salesReceiptContentDto.VehicleOwnerAddress)
+                .Replace(@"{VehicleRegistrationNumber}", salesReceiptContentDto.VehicleRegistrationNumber)
+                .Replace(@"{Insurer}", salesReceiptContentDto.Insurer)
+                .Replace(@"{InvoiceNo}", salesReceiptContentDto.VehicleRegistrationNumber)
+                .Replace(@"{CoveragePeriod}", salesReceiptContentDto.CoveragePeriod)
+                .Replace(@"{TypeOfCover}", salesReceiptContentDto.TypeOfCover)
+                .Replace(@"{SumInsured}", salesReceiptContentDto.SumInsured)             
+                .Replace(@"{TransactionDate}", salesReceiptContentDto.TransactionDate)
+                .Replace(@"{CardHolderName}", salesReceiptContentDto.CardHolderName)
+                .Replace(@"{AuthCode}", salesReceiptContentDto.AuthCode)
+                .Replace(@"{PaymentMethod}", salesReceiptContentDto.PaymentMethod)
+                .Replace(@"{BasicPremium}", salesReceiptContentDto.BasicPremium)
+                .Replace(@"{loading1}", salesReceiptContentDto.loading1)
+                .Replace(@"{loading2}", salesReceiptContentDto.loading2)
+                .Replace(@"{NCD}", salesReceiptContentDto.NCD)
+                .Replace(@"{AddOns1}", salesReceiptContentDto.AddOns1)
+                .Replace(@"{AddOns1Price}", salesReceiptContentDto.AddOns1Price)
+                .Replace(@"{AddOns2}", salesReceiptContentDto.AddOns2)
+                .Replace(@"{AddOns2Price}", salesReceiptContentDto.AddOns2Price)
+                .Replace(@"{AddOns3}", salesReceiptContentDto.AddOns3)
+                .Replace(@"{AddOns3Price}", salesReceiptContentDto.AddOns3Price)
+                .Replace(@"{AddOns4}", salesReceiptContentDto.AddOns4)
+                .Replace(@"{AddOns4Price}", salesReceiptContentDto.AddOns4Price)
+                .Replace(@"{AddOns5}", salesReceiptContentDto.AddOns5)
+                .Replace(@"{AddOns5Price}", salesReceiptContentDto.AddOns5Price)
+                .Replace(@"{AddOns6}", salesReceiptContentDto.AddOns6)
+                .Replace(@"{AddOns6Price}", salesReceiptContentDto.AddOns6Price)
+                .Replace(@"{AddOns7}", salesReceiptContentDto.AddOns7)
+                .Replace(@"{AddOns7Price}", salesReceiptContentDto.AddOns7Price)
+                .Replace(@"{AddOns8}", salesReceiptContentDto.AddOns8)
+                .Replace(@"{AddOns8Price}", salesReceiptContentDto.AddOns8Price)
+                .Replace(@"{AddOns9}", salesReceiptContentDto.AddOns9)
+                .Replace(@"{AddOns9Price}", salesReceiptContentDto.AddOns9Price)
+                .Replace(@"{AddOns10}", salesReceiptContentDto.AddOns10)
+                .Replace(@"{AddOns10Price}", salesReceiptContentDto.AddOns10Price)
+                .Replace(@"{AddOns11}", salesReceiptContentDto.AddOns11)
+                .Replace(@"{AddOns11Price}", salesReceiptContentDto.AddOns11Price)
+                .Replace(@"{AddOns12}", salesReceiptContentDto.AddOns12)
+                .Replace(@"{AddOns12Price}", salesReceiptContentDto.AddOns12Price)
+                .Replace(@"{AddOns13}", salesReceiptContentDto.AddOns13)
+                .Replace(@"{AddOns13Price}", salesReceiptContentDto.AddOns13Price)
+                .Replace(@"{AddOns14}", salesReceiptContentDto.AddOns14)
+                .Replace(@"{AddOns14Price}", salesReceiptContentDto.AddOns14Price)
+                .Replace(@"{AddOns15}", salesReceiptContentDto.AddOns15)
+                .Replace(@"{AddOns15Price}", salesReceiptContentDto.AddOns15Price)
+                .Replace(@"{GrossPremium}", salesReceiptContentDto.GrossPremium)
+                .Replace(@"{ServiceTax}", salesReceiptContentDto.ServiceTax)
+                .Replace(@"{StampDuty}", salesReceiptContentDto.StampDuty)
+                .Replace(@"{AdminFee}", salesReceiptContentDto.AdminFee)
+                .Replace(@"{MyegDelivery}", salesReceiptContentDto.MyegDelivery)
+                .Replace(@"{RoadTaxRenewal}", salesReceiptContentDto.RoadTaxRenewal)
+                .Replace(@"{TotalPayablePremium}", salesReceiptContentDto.TotalPayablePremium)
+                .Replace(@"{LogoImg}", "https://system.carly.com.my/CarlyImage/carly-logo.png");
+
+            Emails.IEmailAppService emailAppService = new Emails.EmailAppService(SettingManager);
+
+            bool isEmailSent = await emailAppService.SendEmailAsync(salesReceiptContentDto.emailTo, EmailSubject, EmailBody, filepath);
+
+            return isEmailSent;
+        }
+
     }
 }
+
+
+
 
