@@ -105,7 +105,7 @@ namespace Carly.Controllers
 
 
         [HttpPost]
-        public async Task<bool> SendSalesReceiptEmail(SalesReceiptContentDto salesReceiptContentDto)
+        public async Task<bool> SendSalesReceiptEmail([FromBody] SalesReceiptContentDto salesReceiptContentDto)
         {
             string EmailSubject = salesReceiptContentDto.Subject;
 
