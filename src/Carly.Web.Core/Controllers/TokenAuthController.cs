@@ -115,7 +115,7 @@ namespace Carly.Controllers
             {
                 iPay88 tempiPay88 = _iPay88Repository.FirstOrDefault(x => x.RefNo == referenceNo && x.Status == "1");
 
-                if(tempiPay88 is not null)
+                if(tempiPay88 != null)
                 {
                     salesReceiptContentDto.CardHolderName = tempiPay88.CCName;
                     salesReceiptContentDto.AuthCode = tempiPay88.AuthCode;
@@ -349,9 +349,9 @@ namespace Carly.Controllers
                         + "<p style= \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">Vehicle Reg.No.</p>"
                         + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
                         + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:12px; font-weight:bold; overflow-wrap: break-word;\">{VehicleRegistrationNumber}</p>"
-                        + "</td><td><p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">Insurer</p>"
+                        + "</td><td><p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold; overflow-wrap: break-word;\">Insurer</p>"
                         + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
-                        + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">{Insurer}</p>"
+                        + "<p style = \"inline-size: 180px; font-family:quicksand; font-size:15px; line-height:15px; font-weight:bold; overflow-wrap: break-word;\">{Insurer}</p>"
                         + "</td></tr><tr><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
                         + "<p style = \"inline-size: 120px; font-family:quicksand; font-size:15px; line-height:10px; font-weight:bold; overflow-wrap: break-word;\">Sum Insured</p>"
                         + "</td><td style = \"background:#fff; border-radius: 0 0 1rem 1rem\">"
