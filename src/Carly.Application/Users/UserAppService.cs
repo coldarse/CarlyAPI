@@ -581,7 +581,7 @@ namespace Carly.Users
               + "<span style = \"font-family:quicksand; font-size:12px; color:#9e9e9e; line-height:14px\">Cardholder's Name</span><br />"
               + "<span style = \"font-family:quicksand; font-size:12px; line-height:16px; font-weight:bold\">{CardHolderName}</span>"
               + "</td></tr></tbody></table></td></tr>"
-              + "<tr><td align = \"left\" valign =\"top\"><table border = \"0\" cellspacing =\"0\" cellpadding=\"0\" width=\"100%\">"
+              + "<tr><td align = \"left\" valign =\"top\">"
               + "<tbody><tr><td align = \"left\" style =\"font-family:quicksand; font-size:14px;font-weight:bold;\">"
               + "<span style = \"font-family:quicksand; font-size:12px; color:#9e9e9e; line-height:14px\">Authorization Code</span><br/>"
               + "<span style = \"font-family:quicksand; font-size:12px; line-height:16px; font-weight:bold\">{AuthCode}</span>"
@@ -593,10 +593,8 @@ namespace Carly.Users
               + "<table width =\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\">"
               + "<tbody><tr><td align = \"left\" valign=\"top\" style=\"padding:0cm 0cm 0cm 0cm\">"
               + "<table width = \"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">"
-              + "<tbody><tr><td valign = \"top\" ><table width =\"100%\" border = \"0\" cellspacing=\"0\" cellpadding=\"0\">"
               + "<tbody><tr><td align = \"left\" valign=\"top\"><table border = \"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">"
               + "<tr><td height = \"10px\" align=\"left\"></td><td height = \"10px\" colspan=\"2\" align=\"left\"></td><td height = \"10px\" align=\"left\"></td></tr>"
-              + "<tbody>"
               + "<tr><td height = \"5px\" align=\"left\"></td><td height = \"5px\" colspan=\"2\" align=\"left\" style=\"font-family:quicksand; font-size:11px;line-height:18px; color:#9e9e9e\">"
               + "Payment Method:<br /><span style = \"font-weight:bold;color:#000000\"> {PaymentMethod}&nbsp;&nbsp;</span></td>"
               + "<td height = \"5px\" align=\"left\"></td></tr><tr><td height = \"5px\" align =\"left\"></td><td height = \"5px\" colspan =\"2\" align =\"left\"></td>"
@@ -664,6 +662,24 @@ namespace Carly.Users
                 + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; font-weight:bold\"> &nbsp; &nbsp; &nbsp; &nbsp; {AddOns1Price} </span></td>"
                 + "<td align = \"right\" width =\"15\"></td></tr><tr>";
             }
+            else
+            {
+                EmailBody += "<tr style = \"color:#000000\">"
+                  + "<td align =\"left\" width =\"15\"></td>"
+                  + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                  + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"></span>"
+                  + "<span style = \"font-family:quicksand; font-size:11px;font-weight:bold\"></span></td>"
+                  + "<td align = \"left\" style =\"font-family:quicksand; font-size:11px; line-height:18px\">"
+                  + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px\"> &nbsp; &nbsp; &nbsp; &nbsp;</span></td>"
+                  + "<td align = \"right\" width =\"15\"></td></tr>"
+                  + "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
+                  + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold; display: block;\">"
+                  + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; display: block;\"> &nbsp;</span></td>"
+                  + "<td align = \"left\" style = \"font-family:quicksand; font-size:14px; font-weight:bold;\">"
+                  + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; font-weight:bold\"> &nbsp; &nbsp; &nbsp; &nbsp;</span></td>"
+                  + "<td align = \"right\" width =\"15\"></td></tr><tr>";
+            }
+
             if (salesReceiptContentDto.AddOns2.Length > 0)
             {
                 EmailBody += "<tr style = \"color:#000000\"><td align =\"left\" width =\"15\"></td>"
@@ -857,7 +873,7 @@ namespace Carly.Users
             + "<td align = \"left\" style =\"font-family:quicksand; font-size:14px; font-weight:bold;\">"
             + "<span style = \"font-family:quicksand; font-size:11px; line-height:18px; font-weight:bold\"> &nbsp; &nbsp; &nbsp; &nbsp; {TotalPayablePremium} </span></td>"
             + "<td align = \"right\" width =\"15\"></td></tr></tbody>"
-            + "</table></td></tr>"
+            + "</td></tr>"
             + "<tr><td align = \"left\" valign =\"top\">"
             + "<table border = \"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">"
             + "<tbody><tr><td align = \"left\" style=\"font-family:quicksand; font-size:15px; font-weight:bold;\"></td></tr></tbody>"
