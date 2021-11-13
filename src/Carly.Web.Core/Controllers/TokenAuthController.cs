@@ -771,6 +771,7 @@ namespace Carly.Controllers
                 }
                 else
                 {
+                    await Task.Delay(3000);
                     continue;
                 }
             }
@@ -822,36 +823,36 @@ namespace Carly.Controllers
 
             iPay88 newPayment = iPay88Response;
 
-            iPay88 temppay = await _iPay88Repository.FirstOrDefaultAsync(x => x.RefNo == iPay88Response.RefNo);
+            //iPay88 temppay = await _iPay88Repository.FirstOrDefaultAsync(x => x.RefNo == iPay88Response.RefNo);
             iPay88 tempInsert;
 
-            if (temppay == null)
-            {
-                tempInsert = await _iPay88Repository.InsertAsync(newPayment);
+            //if (temppay == null)
+            //{
+            tempInsert = await _iPay88Repository.InsertAsync(newPayment);
 
-                if (tempInsert != null)
-                {
-                    return "RECEIVEOK";
-                }
-                else
-                {
-                    return "FAIL";
-                }
+            if (tempInsert != null)
+            {
+                return "RECEIVEOK";
             }
             else
             {
-                temppay = iPay88Response;
-                tempInsert = await _iPay88Repository.UpdateAsync(temppay);
-
-                if (tempInsert != null)
-                {
-                    return "RECEIVEOK";
-                }
-                else
-                {
-                    return "FAIL";
-                }
+                return "FAIL";
             }
+            //}
+            //else
+            //{
+            //    temppay = iPay88Response;
+            //    tempInsert = await _iPay88Repository.UpdateAsync(temppay);
+
+            //    if (tempInsert != null)
+            //    {
+            //        return "RECEIVEOK";
+            //    }
+            //    else
+            //    {
+            //        return "FAIL";
+            //    }
+            //}
             
         }
 
@@ -1033,25 +1034,25 @@ namespace Carly.Controllers
         {
             if (iPay88Response.Status == "1")
             {
-                iPay88 temppay = await _iPay88Repository.FirstOrDefaultAsync(x => x.RefNo == iPay88Response.RefNo);
+               // iPay88 temppay = await _iPay88Repository.FirstOrDefaultAsync(x => x.RefNo == iPay88Response.RefNo);
 
-                if(temppay == null)
-                {
-                    await _iPay88Repository.InsertAsync(iPay88Response);
-                    return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
-                }
-                else
-                {
-                    temppay = iPay88Response;
-                    await _iPay88Repository.UpdateAsync(temppay);
-                    return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
-                }
+                //if(temppay == null)
+                //{
+                    //await _iPay88Repository.InsertAsync(iPay88Response);
+                return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
+                //}
+                //else
+                //{
+                //    temppay = iPay88Response;
+                //    await _iPay88Repository.UpdateAsync(temppay);
+                //    return Redirect("https://system.carly.com.my/CarlyApp/#/thankyou");
+                //}
             }
             else
             {
-                iPay88 newPayment = iPay88Response;
+                //iPay88 newPayment = iPay88Response;
 
-                iPay88 tempInsert = await _iPay88Repository.InsertAsync(newPayment);
+                //iPay88 tempInsert = await _iPay88Repository.InsertAsync(newPayment);
 
                 return Redirect("https://system.carly.com.my/CarlyApp/#/failorder");
             }
